@@ -1,8 +1,6 @@
 package myAdapter;
 
-import java.util.Collection;
-
-public interface HList extends Collection{
+public interface HList extends HCollection{
 
     /**
      * Returns the number of elements in this list. If this list contains more than Integer.MAX_VALUE elements, returns Integer.MAX_VALUE.
@@ -89,7 +87,7 @@ public interface HList extends Collection{
      * @throws NullPointerException if the specified collection is null.
      * @see contains(Object)
      */
-    public boolean containsAll(Collection c);
+    public boolean containsAll(HCollection c);
 
     /**
      * Appends all of the elements in the specified collection to the end of this list, in the order that they are returned by the specified collection's iterator (optional operation). The behavior of this operation is unspecified if the specified collection is modified while the operation is in progress. (Note that this will occur if the specified collection is this list, and it's nonempty.)
@@ -102,7 +100,7 @@ public interface HList extends Collection{
      * @throws IllegalArgumentException if some aspect of an element in the specified collection prevents it from being added to this list.
      * @seeadd(Object)
      */
-    public boolean addAll(Collection c);
+    public boolean addAll(HCollection c);
 
     /**
      * Inserts all of the elements in the specified collection into this list at the specified position (optional operation). Shifts the element currently at that position (if any) and any subsequent elements to the right (increases their indices). The new elements will appear in this list in the order that they are returned by the specified collection's iterator. The behavior of this operation is unspecified if the specified collection is modified while the operation is in progress. (Note that this will occur if the specified collection is this list, and it's nonempty.)
@@ -115,7 +113,7 @@ public interface HList extends Collection{
      * @throws IllegalArgumentException if some aspect of one of elements of the specified collection prevents it from being added to this list. 
      * @throws IndexOutOfBoundsException if the index is out of range (index < 0 || index > size()).
      */
-    public boolean addAll(int index, Collection c);
+    public boolean addAll(int index, HCollection c);
 
     /**
      * Removes from this list all the elements that are contained in the specified collection (optional operation).
@@ -129,7 +127,7 @@ public interface HList extends Collection{
      * @see remove(Object)
      * @see contains(Object)
      */
-    public boolean removeAll(Collection c);
+    public boolean removeAll(HCollection c);
 
     /**
      * Retains only the elements in this list that are contained in the specified collection (optional operation). In other words, removes from this list all the elements that are not contained in the specified collection
@@ -142,7 +140,7 @@ public interface HList extends Collection{
      * @throws NullPointerException if the specified collection is null.
      * @see remove(Object), contains(Object)
      */
-    public boolean retainAll(Collection c);
+    public boolean retainAll(HCollection c);
     
     /**
      * Removes all of the elements from this list (optional operation). This list will be empty after this call returns (unless it throws an exception).
