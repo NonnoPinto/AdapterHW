@@ -1,7 +1,5 @@
 package myAdapter;
 
-import java.util.*;
-
 public interface HMap{
     /**
      * Returns the number of key-value mappings in this map. If the map contains more than Integer.MAX_VALUE elements, returns Integer.MAX_VALUE. 
@@ -76,7 +74,7 @@ public interface HMap{
      * @throws IllegalArgumentException some aspect of a key or value in the specified map prevents it from being stored in this map. 
      * @throws NullPointerException the specified map is null, or if this map does not permit null keys or values, and the specified map contains null keys or values
      */
-    public void putAll(Map t);
+    public void putAll(HMap t);
 
     /**
      * Removes all mappings from this map (optional operation).
@@ -88,18 +86,18 @@ public interface HMap{
      * Returns a set view of the keys contained in this map. The set is backed by the map, so changes to the map are reflected in the set, and vice-versa. If the map is modified while an iteration over the set is in progress, the results of the iteration are undefined. The set supports element removal, which removes the corresponding mapping from the map, via the Iterator.remove, Set.remove, removeAll retainAll, and clear operations. It does not support the add or addAll operations.
      * @return a set view of the keys contained in this map.
      */
-    public Set keySet();
+    public HSet keySet();
 
     /**
      * Returns a collection view of the values contained in this map. The collection is backed by the map, so changes to the map are reflected in the collection, and vice-versa. If the map is modified while an iteration over the collection is in progress, the results of the iteration are undefined. The collection supports element removal, which removes the corresponding mapping from the map, via the Iterator.remove, Collection.remove, removeAll, retainAll and clear operations. It does not support the add or addAll operations.
      * @return a collection view of the values contained in this map.
      */
-    public Collection values();
+    public HCollection values();
 
     /** Returns a set view of the mappings contained in this map. Each element in the returned set is a Map.Entry. The set is backed by the map, so changes to the map are reflected in the set, and vice-versa. If the map is modified while an iteration over the set is in progress, the results of the iteration are undefined. The set supports element removal, which removes the corresponding mapping from the map, via the Iterator.remove, Set.remove, removeAll, retainAll and clear operations. It does not support the add or addAll operations.
      * @return a set view of the mappings contained in this map.
      */
-    public Set entrySet();
+    public HSet entrySet();
 
     /**
      * Compares the specified object with this map for equality. Returns true if the given object is also a map and the two Maps represent the same mappings. More formally, two maps t1 and t2 represent the same mappings if t1.entrySet().equals(t2.entrySet()). This ensures that the equals method works properly across different implementations of the Map interface.
