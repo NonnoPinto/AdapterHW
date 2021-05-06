@@ -1,7 +1,5 @@
 package myAdapter;
 
-import java.util.*;
-
     /**
      *  A collection that contains no duplicate elements. More formally, sets contain no pair of elements e1 and e2 such that e1.equals(e2), and at most one null element. As implied by its name, this interface models the mathematical set abstraction.
      * The Set interface places additional stipulations, beyond those inherited from the Collection interface, on the contracts of all constructors and on the contracts of the add, equals and hashCode methods. Declarations for other inherited methods are also included here for convenience. (The specifications accompanying these declarations have been tailored to the Set interface, but they do not contain any additional stipulations.)
@@ -30,7 +28,7 @@ public interface HSet extends HCollection{
      * @throws ClassCastException - if the type of the specified element is incompatible with this set (optional).
      * @throws NullPointerException - if the specified element is null and this set does not support null elements (optional).
      */
-    public boolean contains(Object o);
+    public boolean contains(Object o) throws ClassCastException, NullPointerException;
 
     /**
      * Returns an iterator over the elements in this set. The elements are returned in no particular order (unless this set is an instance of some class that provides a guarantee).
@@ -51,7 +49,7 @@ public interface HSet extends HCollection{
      * @throws ArrayStoreException - the runtime type of a is not a supertype of the runtime type of every element in this set.
      * @throws NullPointerException - if the specified array is null.
      */
-    public Object[] toArray(Object[] a);
+    public Object[] toArray(Object[] a) throws ArrayStoreException, NullPointerException;
 
     /**
      * Adds the specified element to this set if it is not already present (optional operation). More formally, adds the specified element, o, to this set if this set contains no element e such that (o==null ? e==null : o.equals(e)). If this set already contains the specified element, the call leaves this set unchanged and returns false. In combination with the restriction on constructors, this ensures that sets never contain duplicate elements.
@@ -63,7 +61,7 @@ public interface HSet extends HCollection{
      * @throws NullPointerException - if the specified element is null and this set does not support null elements.
      * @throws IllegalArgumentException - if some aspect of the specified element prevents it from being added to this set.
      */
-    public boolean add(Object o);
+    public boolean add(Object o) throws UnsupportedOperationException, ClassCastException, NullPointerException, IllegalArgumentException;
 
     /**
      * Removes the specified element from this set if it is present (optional operation). More formally, removes an element e such that (o==null ? e==null : o.equals(e)), if the set contains such an element. Returns true if the set contained the specified element (or equivalently, if the set changed as a result of the call). (The set will not contain the specified element once the call returns.)
@@ -73,7 +71,7 @@ public interface HSet extends HCollection{
      * @throws NullPointerException - if the specified element is null and this set does not support null elements (optional).
      * @throws UnsupportedOperationException - if the remove method is not supported by this set.
      */
-    public boolean remove(Object o);
+    public boolean remove(Object o) throws ClassCastException, NullPointerException, UnsupportedOperationException;
 
     /**
      * Returns true if this set contains all of the elements of the specified collection. If the specified collection is also a set, this method returns true if it is a subset of this set.
@@ -83,7 +81,7 @@ public interface HSet extends HCollection{
      * @throws NullPointerException - if the specified collection contains one or more null elements and this set does not support null elements (optional).
      * @throws NullPointerException - if the specified collection is null.
      */
-    public boolean containsAll(HCollection c);
+    public boolean containsAll(HCollection c) throws ClassCastException, NullPointerException;
 
     /**
      * Adds all of the elements in the specified collection to this set if they're not already present (optional operation). If the specified collection is also a set, the addAll operation effectively modifies this set so that its value is the union of the two sets. The behavior of this operation is unspecified if the specified collection is modified while the operation is in progress.
@@ -94,7 +92,7 @@ public interface HSet extends HCollection{
      * @throws NullPointerException - if the specified collection contains one or more null elements and this set does not support null elements, or if the specified collection is null.
      * @throws IllegalArgumentException - if some aspect of some element of the specified collection prevents it from being added to this set.
      */
-    public boolean addAll(HCollection c);
+    public boolean addAll(HCollection c) throws UnsupportedOperationException, ClassCastException, NullPointerException, IllegalArgumentException;
 
     /**
      * Retains only the elements in this set that are contained in the specified collection (optional operation). In other words, removes from this set all of its elements that are not contained in the specified collection. If the specified collection is also a set, this operation effectively modifies this set so that its value is the intersection of the two sets.
@@ -116,13 +114,13 @@ public interface HSet extends HCollection{
      * @throws NullPointerException - if this set contains a null element and the specified collection does not support null elements (optional).
      * @throws NullPointerException - if the specified collection is null.
      */
-    public boolean removeAll(HCollection c);
+    public boolean removeAll(HCollection c) throws UnsupportedOperationException, ClassCastException, NullPointerException;
 
     /**
      * Removes all of the elements from this set (optional operation). This set will be empty after this call returns (unless it throws an exception).
      * @throws UnsupportedOperationException - if the clear method is not supported by this set.
      */
-    public void clear();
+    public void clear() throws ClassCastException;
 
     /**
      * Compares the specified object with this set for equality. Returns true if the specified object is also a set, the two sets have the same size, and every member of the specified set is contained in this set (or equivalently, every member of this set is contained in the specified set). This definition ensures that the equals method works properly across different implementations of the set interface.

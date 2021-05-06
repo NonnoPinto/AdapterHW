@@ -1,8 +1,8 @@
 package myAdapter;
 
-import java.util.*;
+import org.graalvm.compiler.lir.NullCheckOptimizer;
 
-    /**
+/**
      *  The root interface in the collection hierarchy. A collection represents a group of objects, known as its elements. Some collections allow duplicate elements and others do not. Some are ordered and others unordered. The SDK does not provide any direct implementations of this interface: it provides implementations of more specific subinterfaces like Set and List. This interface is typically used to pass collections around and manipulate them where maximum generality is desired.
      * Bags or multisets (unordered collections that may contain duplicate elements) should implement this interface directly.
      * All general-purpose Collection implementation classes (which typically implement Collection indirectly through one of its subinterfaces) should provide two "standard" constructors: a void (no arguments) constructor, which creates an empty collection, and a constructor with a single argument of type Collection, which creates a new collection with the same elements as its argument. In effect, the latter constructor allows the user to copy any collection, producing an equivalent collection of the desired implementation type. There is no way to enforce this convention (as interfaces cannot contain constructors) but all of the general-purpose Collection implementations in the Java platform libraries comply.
@@ -31,7 +31,7 @@ public interface HCollection {
      * @throws ClassCastException - if the type of the specified element is incompatible with this collection (optional).
      * @throws NullPointerException - if the specified element is null and this collection does not support null elements (optional).
      */
-    public boolean contains(Object o);
+    public boolean contains(Object o) throws ClassCastException, NullPointerException;
 
     /**
      * Returns an iterator over the elements in this collection. There are no guarantees concerning the order in which the elements are returned (unless this collection is an instance of some class that provides a guarantee).
@@ -59,7 +59,7 @@ public interface HCollection {
      * @throws ArrayStoreException - the runtime type of the specified array is not a supertype of the runtime type of every element in this collection.
      * @throws NullPointerException - if the specified array is null.
      */
-    public Object[] toArray(Object[] a);
+    public Object[] toArray(Object[] a) throws ArrayStoreException, NullPointerException;
 
     /**
      * Ensures that this collection contains the specified element (optional operation). Returns true if this collection changed as a result of the call. (Returns false if this collection does not permit duplicates and already contains the specified element.)
@@ -72,7 +72,7 @@ public interface HCollection {
      * @throws NullPointerException - if the specified element is null and this collection does not support null elements.
      * @throws IllegalArgumentException - some aspect of this element prevents it from being added to this collection.
      */
-    public boolean add(Object o);
+    public boolean add(Object o) throws IllegalArgumentException, NullPointerException, ClassCastException, UnsupportedOperationException;
 
     /**
      * Removes a single instance of the specified element from this collection, if it is present (optional operation). More formally, removes an element e such that (o==null ? e==null : o.equals(e)), if this collection contains one or more such elements. Returns true if this collection contained the specified element (or equivalently, if this collection changed as a result of the call).
@@ -82,7 +82,7 @@ public interface HCollection {
      * @throws NullPointerException - if the specified element is null and this collection does not support null elements (optional).
      * @throws UnsupportedOperationException - remove is not supported by this collection.
      */
-    public boolean remove(Object o);
+    public boolean remove(Object o) throws NullPointerException, ClassCastException, UnsupportedOperationException;
 
     /**
      * Returns true if this collection contains all of the elements in the specified collection.
@@ -92,7 +92,7 @@ public interface HCollection {
      * @throws NullPointerException - if the specified collection contains one or more null elements and this collection does not support null elements (optional).
      * @throws NullPointerException - if the specified collection is null.
      */
-    public boolean containsAll(HCollection c);
+    public boolean containsAll(HCollection c) throws ClassCastException, NullPointerException;
 
     /**
      * Adds all of the elements in the specified collection to this collection (optional operation). The behavior of this operation is undefined if the specified collection is modified while the operation is in progress. (This implies that the behavior of this call is undefined if the specified collection is this collection, and this collection is nonempty.)
@@ -103,7 +103,7 @@ public interface HCollection {
      * @throws NullPointerException - if the specified collection contains one or more null elements and this collection does not support null elements, or if the specified collection is null.
      * @throws IllegalArgumentException - some aspect of an element of the specified collection prevents it from being added to this collection.
      */
-    public boolean addAll(HCollection c);
+    public boolean addAll(HCollection c) throws NullPointerException, ClassCastException, UnsupportedOperationException, IllegalArgumentException;
 
     /**
      * Removes all this collection's elements that are also contained in the specified collection (optional operation). After this call returns, this collection will contain no elements in common with the specified collection.
@@ -114,7 +114,7 @@ public interface HCollection {
      * @throws NullPointerException - if this collection contains one or more null elements and the specified collection does not support null elements (optional).
      * @throws NullPointerException - if the specified collection is null.
      */
-    public boolean removeAll(HCollection c);
+    public boolean removeAll(HCollection c) throws ClassCastException, UnsupportedOperationException, NullPointerException;
 
     /**
      * Retains only the elements in this collection that are contained in the specified collection (optional operation). In other words, removes from this collection all of its elements that are not contained in the specified collection.
@@ -125,13 +125,13 @@ public interface HCollection {
      * @throws NullPointerException - if this collection contains one or more null elements and the specified collection does not support null elements (optional).
      * @throws NullPointerException - if the specified collection is null.
      */
-    public boolean retainAll(HCollection c);
+    public boolean retainAll(HCollection c) throws ClassCastException, UnsupportedOperationException, NullPointerException;
 
     /**
      * Removes all of the elements from this collection (optional operation). This collection will be empty after this method returns unless it throws an exception.
      * @throws UnsupportedOperationException - if the clear method is not supported by this collection.
      */
-    public void clear();
+    public void clear() throws UnsupportedOperationException;
 
     /**
      * Compares the specified object with this collection for equality.

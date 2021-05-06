@@ -1,5 +1,6 @@
 package myAdapter;
 
+import java.util.NoSuchElementException;
 import java.util.Vector;
 
 //There arent any ClassCastExcpetion (and similar exception) cuz we r supposing everything is Object
@@ -250,14 +251,6 @@ public class ListAdapter implements HList{
     
     @Override
     public int hashCode(){
-        // TODO Auto-generated method stub
-        return -1;
-    }
-    
-    @Override
-    public boolean equals(Object o){
-        // TODO Auto-generated method stub
-
         /*int hashCode = 1;
         Iterator i = list.iterator();
         while (i.hasNext()) {
@@ -265,7 +258,87 @@ public class ListAdapter implements HList{
             hashCode = 31*hashCode + (obj==null ? 0 : obj.hashCode());
         }
         return hashCode;*/
+        return -1;
+    }
+    
+    @Override
+    public boolean equals(Object o){
+        // TODO Auto-generated method stub
+
         return true;
     }
 
+    private class HIterator implents HIterator{
+        private Vector<Object> v;
+        private int index;
+        private boolean next;
+
+        HIterator(){
+            v = null;
+            next = false;
+            index = 0;
+        }
+
+        HIterator(Vector<Object> vec){
+            v = vec;
+            next = false;
+            index = 0;
+        }
+
+        public boolean hasNext(){
+            return (index < v.size());
+        }
+
+        public Object next(){
+            if (index == v.size())
+                throw new NoSuchElementException();
+            
+        }
+
+        public void remove(){
+
+        }
+    }
+
+    private class HListIterator implents HListIterator{
+        HListIterator(){
+
+        }
+
+        void add(Object o){
+
+        }
+          
+        boolean hasNext(){
+
+        }
+                
+        boolean hasPrevious(){
+
+        }
+                
+        Object next(){
+
+        }
+                
+        int nextIndex(){
+
+        }
+                
+        Object previous(){
+
+        }
+                
+        int previousIndex(){
+
+        }
+                
+        void remove(){
+
+        }
+                
+        void set(Object o){
+
+        }
+    }
 }
