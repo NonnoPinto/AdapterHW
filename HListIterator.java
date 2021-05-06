@@ -13,7 +13,7 @@ public interface HListIterator extends HIterator {
      * a subsequent call to next would be unaffected, and a subsequent call to
      * previous would return the new element. (This call increases by one the value
      * that would be returned by a call to nextIndex or previousIndex.)
-     * 
+     *
      * @param o - the element to insert.
      * @throws UnsupportedOperationException - if the add method is not supported by
      *                                       this list iterator.
@@ -30,7 +30,7 @@ public interface HListIterator extends HIterator {
      * Returns true if this list iterator has more elements when traversing the list
      * in the forward direction. (In other words, returns true if next would return
      * an element rather than throwing an exception.)
-     * 
+     *
      * @return true if the list iterator has more elements when traversing the list
      *         in the forward direction.
      */
@@ -40,7 +40,7 @@ public interface HListIterator extends HIterator {
      * Returns true if this list iterator has more elements when traversing the list
      * in the reverse direction.(In other words, returns true if previous would
      * return an element rather than throwing an exception.)
-     * 
+     *
      * @return true if the list iterator has more elements when traversing the list
      *         in the reverse direction.
      */
@@ -51,7 +51,7 @@ public interface HListIterator extends HIterator {
      * iterate through the list, or intermixed with calls to previous to go back and
      * forth. (Note that alternating calls to next and previous will return the same
      * element repeatedly.)
-     * 
+     *
      * @return the next element in the list
      * @throws NoSuchElementException - if the iteration has no next element.
      */
@@ -60,7 +60,7 @@ public interface HListIterator extends HIterator {
     /**
      * Returns the index of the element that would be returned by a subsequent call
      * to next. (Returns list size if the list iterator is at the end of the list.)
-     * 
+     *
      * @return the index of the element that would be returned by a subsequent call
      *         to next, or list size if list iterator is at end of list.
      */
@@ -71,7 +71,7 @@ public interface HListIterator extends HIterator {
      * repeatedly to iterate through the list backwards, or intermixed with calls to
      * next to go back and forth. (Note that alternating calls to next and previous
      * will return the same element repeatedly.)
-     * 
+     *
      * @return the previous element in the list.
      * @throws NoSuchElementException - if the iteration has no previous element.
      */
@@ -81,7 +81,7 @@ public interface HListIterator extends HIterator {
      * Returns the index of the element that would be returned by a subsequent call
      * to previous. (Returns -1 if the list iterator is at the beginning of the
      * list.)
-     * 
+     *
      * @return the index of the element that would be returned by a subsequent call
      *         to previous, or -1 if list iterator is at beginning of list.
      */
@@ -92,7 +92,7 @@ public interface HListIterator extends HIterator {
      * (optional operation). This call can only be made once per call to next or
      * previous. It can be made only if ListIterator.add has not been called after
      * the last call to next or previous.
-     * 
+     *
      * @throws UnsupportedOperationException - if the remove operation is not
      *                                       supported by this list iterator.
      * @throws IllegalStateException         - neither next nor previous have been
@@ -107,7 +107,7 @@ public interface HListIterator extends HIterator {
      * element (optional operation). This call can be made only if neither
      * ListIterator.remove nor ListIterator.add have been called after the last call
      * to next or previous.
-     * 
+     *
      * @param o - the element with which to replace the last element returned by
      *          next or previous.
      * @throws UnsupportedOperationException - if the set operation is not supported

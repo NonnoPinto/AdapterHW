@@ -267,78 +267,115 @@ public class ListAdapter implements HList{
 
         return true;
     }
-
-    private class HIterator implents HIterator{
-        private Vector<Object> v;
+    
+    private class IteratorAdapter implements HIterator{
         private int index;
-        private boolean next;
-
-        HIterator(){
-            v = null;
-            next = false;
-            index = 0;
+        private boolean next = false;
+        
+        IteratorAdapter(){
+            index = -1;
         }
 
-        HIterator(Vector<Object> vec){
-            v = vec;
-            next = false;
-            index = 0;
+        IteratorAdapter(Vector<Object> vec){
+            index = -1;
         }
 
         public boolean hasNext(){
-            return (index < v.size());
+            return (index < myVec.size());
         }
 
         public Object next(){
-            if (index == v.size())
+            if (index == myVec.size())
                 throw new NoSuchElementException();
-            
+            next = true;
+
+            return myVec.elementAt(index++);
         }
 
         public void remove(){
-
+            if (next == false || index < 0)
+                throw new IllegalStateException();
+            
+            next = false;
+            myVec.removeElementAt(index);
+            index--;
         }
     }
 
-    private class HListIterator implents HListIterator{
-        HListIterator(){
+    private class ListIteratorAdapter implements HListIterator{
+        
+        IteratorAdapter iter;
+        private boolean check = false;
 
+        ListIteratorAdapter(){
         }
 
-        void add(Object o){
+        ListIteratorAdapter(IteratorAdapter i){
+            iter = i;
+        }
 
+        public void add(Object o){
+            check = false;
+            myVec.insertElementAt(o, this.iter.index++);
         }
           
-        boolean hasNext(){
-
+        public boolean hasNext(){
+            return (this.iter.index < myVec.size());
         }
                 
-        boolean hasPrevious(){
-
+        public boolean hasPrevious(){
+            return  (this.iter.index > 0);
         }
                 
-        Object next(){
-
+        public Object next(){
+            check = true;
+            return this.iter.next();
         }
                 
-        int nextIndex(){
+        public int nextIndex(){
+            int myIndex;
+            if (this.iter.index==myVec.size())
+                myIndex = this.iter.index;
+            else
+                myIndex = this.iter.index+1;
 
+            return myIndex;
         }
                 
-        Object previous(){
-
+        public Object previous(){
+            if (this.iter.index == 0)
+                throw new NoSuchElementException();
+            check = true;
+            
+            return (myVec.elementAt(this.iter.index--));
         }
                 
-        int previousIndex(){
+        public int previousIndex(){
+            int myIndex;
+            if (this.iter.index==-1)
+                myIndex = -1;
+            else
+                myIndex = this.iter.index-1;
 
+            return myIndex;
         }
                 
-        void remove(){
-
+        public void remove(){
+            if (check == false || this.iter.index < 0)
+                throw new IllegalStateException();
+            
+            check = false;
+            
+            myVec.removeElementAt(this.iter.index);
         }
                 
-        void set(Object o){
+        public void set(Object o){
+            if (check == false || this.iter.index < 0)
+                throw new IllegalStateException();
+            
+            check = false;
 
+            myVec.setElementAt(o, this.iter.index);
         }
     }
 }
