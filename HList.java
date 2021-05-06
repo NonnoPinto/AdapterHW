@@ -63,7 +63,7 @@ public interface HList extends HCollection{
      * @throws ArrayStoreException if the runtime type of the specified array is not a supertype of the runtime type of every element in this list. 
      * @throws NullPointerException if the specified array is null.
      */
-    public Object[] toArray(Object[] a), throws ArrayStoreException, NullPointerException;
+    public Object[] toArray(Object[] a) throws ArrayStoreException, NullPointerException;
     
     /**
      * Appends the specified element to the end of this list (optional operation).
@@ -111,7 +111,7 @@ public interface HList extends HCollection{
      * @throws NullPointerException if the specified collection contains one or more null elements and this list does not support null elements, or if the specified collection is null. 
      * @throws IllegalArgumentException if some aspect of an element in the specified collection prevents it from being added to this list.
      */
-    public boolean addAll(HCollection c), throws UnsupportedOperationException, ClassCastException, NullPointerException, IllegalArgumentException;
+    public boolean addAll(HCollection c) throws UnsupportedOperationException, ClassCastException, NullPointerException, IllegalArgumentException;
 
     /**
      * Inserts all of the elements in the specified collection into this list at the specified position (optional operation). Shifts the element currently at that position (if any) and any subsequent elements to the right (increases their indices). The new elements will appear in this list in the order that they are returned by the specified collection's iterator. The behavior of this operation is unspecified if the specified collection is modified while the operation is in progress. (Note that this will occur if the specified collection is this list, and it's nonempty.)
@@ -124,7 +124,7 @@ public interface HList extends HCollection{
      * @throws IllegalArgumentException if some aspect of one of elements of the specified collection prevents it from being added to this list. 
      * @throws IndexOutOfBoundsException if the index is out of range (index < 0 || index > size()).
      */
-    public boolean addAll(int index, HCollection c) throws UnsupportedOperationException, ClassCastException, NullPointerException, IllegalArgumentException, IndexOutOfBoundsException;throws UnsupportedOperationException, ClassCastException, NullPointerException;
+    public boolean addAll(int index, HCollection c) throws UnsupportedOperationException, ClassCastException, NullPointerException, IllegalArgumentException, IndexOutOfBoundsException;
 
     /**
      * Removes from this list all the elements that are contained in the specified collection (optional operation).
@@ -232,7 +232,7 @@ public interface HList extends HCollection{
      * @throws ClassCastException if the type of the specified element is incompatible with this list (optional). 
      * @throws NullPointerException if the specified element is null and this list does not support null elements (optional).
      */
-    public int indexOf(Object o) throws ClassCastException. NullPointerException;
+    public int indexOf(Object o) throws ClassCastException, NullPointerException;
     
     /**
      * Returns the index in this list of the last occurrence of the specified element, or -1 if this list does not contain this element. More formally, returns the highest index i such that (o==null ? get(i)==null : o.equals(get(i))), or -1 if there is no such index.
@@ -255,7 +255,7 @@ public interface HList extends HCollection{
      * @return a list iterator of the elements in this list (in proper sequence), starting at the specified position in this list. 
      * @throws IndexOutOfBoundsException if the index is out of range (index < 0 || index > size()).
      */
-    public HListIterator listIterator(int index) throws IndexOutOfBoundsException
+    public HListIterator listIterator(int index) throws IndexOutOfBoundsException;
     
     /**
      * Returns a view of the portion of this list between the specified fromIndex, inclusive, and toIndex, exclusive. (If fromIndex and toIndex are equal, the returned list is empty.) The returned list is backed by this list, so non-structural changes in the returned list are reflected in this list, and vice-versa. The returned list supports all of the optional list operations supported by this list.
@@ -272,5 +272,5 @@ public interface HList extends HCollection{
      * @return a view of the specified range within this list. 
      * @throws IndexOutOfBoundsException for an illegal endpoint index value (fromIndex < 0 || toIndex > size || fromIndex > toIndex).
      */
-    public HList subList(int fromIndex, int toIndex) thorws IndexOutOfBoundsException;
+    public HList subList(int fromIndex, int toIndex) throws IndexOutOfBoundsException;
 }

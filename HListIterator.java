@@ -1,5 +1,7 @@
 package myAdapter;
 
+import java.util.*;
+
 public interface HListIterator extends HIterator {
 
     /**

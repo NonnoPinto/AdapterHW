@@ -1,7 +1,5 @@
 package myAdapter;
 
-import org.graalvm.compiler.lir.NullCheckOptimizer;
-
 /**
      *  The root interface in the collection hierarchy. A collection represents a group of objects, known as its elements. Some collections allow duplicate elements and others do not. Some are ordered and others unordered. The SDK does not provide any direct implementations of this interface: it provides implementations of more specific subinterfaces like Set and List. This interface is typically used to pass collections around and manipulate them where maximum generality is desired.
      * Bags or multisets (unordered collections that may contain duplicate elements) should implement this interface directly.
