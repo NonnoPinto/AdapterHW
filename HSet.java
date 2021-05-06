@@ -1,6 +1,16 @@
 package myAdapter;
 
-public interface HSet {
+import java.util.*;
+
+    /**
+     *  A collection that contains no duplicate elements. More formally, sets contain no pair of elements e1 and e2 such that e1.equals(e2), and at most one null element. As implied by its name, this interface models the mathematical set abstraction.
+     * The Set interface places additional stipulations, beyond those inherited from the Collection interface, on the contracts of all constructors and on the contracts of the add, equals and hashCode methods. Declarations for other inherited methods are also included here for convenience. (The specifications accompanying these declarations have been tailored to the Set interface, but they do not contain any additional stipulations.)
+     * The additional stipulation on constructors is, not surprisingly, that all constructors must create a set that contains no duplicate elements (as defined above).
+     * Note: Great care must be exercised if mutable objects are used as set elements. The behavior of a set is not specified if the value of an object is changed in a manner that affects equals comparisons while the object is an element in the set. A special case of this prohibition is that it is not permissible for a set to contain itself as an element.
+     * Some set implementations have restrictions on the elements that they may contain. For example, some implementations prohibit null elements, and some have restrictions on the types of their elements. Attempting to add an ineligible element throws an unchecked exception, typically NullPointerException or ClassCastException. Attempting to query the presence of an ineligible element may throw an exception, or it may simply return false; some implementations will exhibit the former behavior and some will exhibit the latter. More generally, attempting an operation on an ineligible element whose completion would not result in the insertion of an ineligible element into the set may throw an exception or it may succeed, at the option of the implementation. Such exceptions are marked as "optional" in the specification for this interface. 
+     */
+
+public interface HSet extends HCollection{
     /**
      * Returns the number of elements in this set (its cardinality). If this set contains more than Integer.MAX_VALUE elements, returns Integer.MAX_VALUE.
      * @return the number of elements in this set (its cardinality).
@@ -72,7 +82,6 @@ public interface HSet {
      * @throws ClassCastException - if the types of one or more elements in the specified collection are incompatible with this set (optional).
      * @throws NullPointerException - if the specified collection contains one or more null elements and this set does not support null elements (optional).
      * @throws NullPointerException - if the specified collection is null.
-     * @see contains(Object)
      */
     public boolean containsAll(HCollection c);
 
@@ -84,7 +93,6 @@ public interface HSet {
      * @throws ClassCastException - if the class of some element of the specified collection prevents it from being added to this set.
      * @throws NullPointerException - if the specified collection contains one or more null elements and this set does not support null elements, or if the specified collection is null.
      * @throws IllegalArgumentException - if some aspect of some element of the specified collection prevents it from being added to this set.
-     * @see add(Object)
      */
     public boolean addAll(HCollection c);
 
@@ -96,7 +104,6 @@ public interface HSet {
      * @throws ClassCastException - if the types of one or more elements in this set are incompatible with the specified collection (optional).
      * @throws NullPointerException - if this set contains a null element and the specified collection does not support null elements (optional).
      * @throws NullPointerException - if the specified collection is null.
-     * @see remove(Object)
      */
     public boolean retainAll(HCollection c);
 
@@ -108,7 +115,6 @@ public interface HSet {
      * @throws ClassCastException - if the types of one or more elements in this set are incompatible with the specified collection (optional).
      * @throws NullPointerException - if this set contains a null element and the specified collection does not support null elements (optional).
      * @throws NullPointerException - if the specified collection is null.
-     * @see remove(Object)
      */
     public boolean removeAll(HCollection c);
 
@@ -123,8 +129,6 @@ public interface HSet {
      * @override equals in class Object
      * @param o - Object to be compared for equality with this set.
      * @return true if the specified Object is equal to this set.
-     * @see Object.hashCode()
-     * @see Hashtable
      */
     public boolean equals(Object o);
 
@@ -132,9 +136,6 @@ public interface HSet {
      * Returns the hash code value for this set. The hash code of a set is defined to be the sum of the hash codes of the elements in the set, where the hashcode of a null element is defined to be zero. This ensures that s1.equals(s2) implies that s1.hashCode()==s2.hashCode() for any two sets s1 and s2, as required by the general contract of the Object.hashCode method.
      * @override hashCode in class Object
      * @return the hash code value for this set.
-     * @see Object.hashCode()
-     * @see Object.equals(Object)
-     * @see equals(Object)
      */
     public int hashCode();
 }

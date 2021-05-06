@@ -1,5 +1,16 @@
 package myAdapter;
 
+import java.util.*;
+
+    /** An object that maps keys to values. A map cannot contain duplicate keys; each key can map to at most one value.
+     * This interface takes the place of the Dictionary class, which was a totally abstract class rather than an interface.
+     * The Map interface provides three collection views, which allow a map's contents to be viewed as a set of keys, collection of values, or set of key-value mappings. The order of a map is defined as the order in which the iterators on the map's collection views return their elements. Some map implementations, like the TreeMap class, make specific guarantees as to their order; others, like the HashMap class, do not.
+     * Note: great care must be exercised if mutable objects are used as map keys. The behavior of a map is not specified if the value of an object is changed in a manner that affects equals comparisons while the object is a key in the map. A special case of this prohibition is that it is not permissible for a map to contain itself as a key. While it is permissible for a map to contain itself as a value, extreme caution is advised: the equals and hashCode methods are no longer well defined on a such a map.
+     * All general-purpose map implementation classes should provide two "standard" constructors: a void (no arguments) constructor which creates an empty map, and a constructor with a single argument of type Map, which creates a new map with the same key-value mappings as its argument. In effect, the latter constructor allows the user to copy any map, producing an equivalent map of the desired class. There is no way to enforce this recommendation (as interfaces cannot contain constructors) but all of the general-purpose map implementations in the SDK comply.
+     * The "destructive" methods contained in this interface, that is, the methods that modify the map on which they operate, are specified to throw UnsupportedOperationException if this map does not support the operation. If this is the case, these methods may, but are not required to, throw an UnsupportedOperationException if the invocation would have no effect on the map. For example, invoking the putAll(Map) method on an unmodifiable map may, but is not required to, throw the exception if the map whose mappings are to be "superimposed" is empty.
+     * Some map implementations have restrictions on the keys and values they may contain. For example, some implementations prohibit null keys and values, and some have restrictions on the types of their keys. Attempting to insert an ineligible key or value throws an unchecked exception, typically NullPointerException or ClassCastException. Attempting to query the presence of an ineligible key or value may throw an exception, or it may simply return false; some implementations will exhibit the former behavior and some will exhibit the latter. More generally, attempting an operation on an ineligible key or value whose completion would not result in the insertion of an ineligible element into the map may throw an exception or it may succeed, at the option of the implementation. Such exceptions are marked as "optional" in the specification for this interface. 
+     */
+
 public interface HMap{
     /**
      * Returns the number of key-value mappings in this map. If the map contains more than Integer.MAX_VALUE elements, returns Integer.MAX_VALUE. 
@@ -39,7 +50,6 @@ public interface HMap{
      * @return the value to which this map maps the specified key, or null if the map contains no mapping for this key. 
      * @throws ClassCastException if the key is of an inappropriate type for this map (optional). 
      * @throws NullPointerException key is null and this map does not not permit null keys (optional).
-     * @see containsKey(Object)
      */
     public Object get(Object key);
 
@@ -104,8 +114,6 @@ public interface HMap{
      * @override equals in class Object
      * @param o object to be compared for equality with this map. 
      * @return true if the specified object is equal to this map.
-     * @see Object#hashCode()
-     * @see Hashtable
      */
     public boolean equals(Object o);
 
@@ -113,10 +121,6 @@ public interface HMap{
      * Returns the hash code value for this map. The hash code of a map is defined to be the sum of the hashCodes of each entry in the map's entrySet view. This ensures that t1.equals(t2) implies that t1.hashCode()==t2.hashCode() for any two maps t1 and t2, as required by the general contract of Object.hashCode.
      * @override hashCode in class Object
      * @return the hash code value for this map.
-     * @see equals(Object)
-     * @see Map.Entry#hashCode()
-     * @see Object#hashCode()
-     * @see Object#equals(Object)
      */
     public int hashCode();
 }
