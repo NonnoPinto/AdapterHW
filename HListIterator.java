@@ -2,6 +2,19 @@ package myAdapter;
 
 import java.util.*;
 
+/**
+ * An iterator for lists that allows the programmer to traverse the list in
+ * either direction, modify the list during iteration, and obtain the iterator's
+ * current position in the list. A ListIterator has no current element; its
+ * cursor position always lies between the element that would be returned by a
+ * call to previous() and the element that would be returned by a call to
+ * next(). In a list of length n, there are n+1 valid index values, from 0 to n,
+ * inclusive. Element(0) Element(1) Element(2) ... Element(n) ^ ^ ^ ^ ^ Index: 0
+ * 1 2 3 n+1 Note that the remove() and set(Object) methods are not defined in
+ * terms of the cursor position; they are defined to operate on the last element
+ * returned by a call to next() or previous().
+ */
+
 public interface HListIterator extends HIterator {
 
     /**
