@@ -51,14 +51,14 @@ public interface HMap {
     /**
      * Returns the number of key-value mappings in this map. If the map contains
      * more than Integer.MAX_VALUE elements, returns Integer.MAX_VALUE.
-     * 
+     *
      * @return the number of key-value mappings in this map.
      */
     public int size();
 
     /**
      * Returns true if this map contains no key-value mappings.
-     * 
+     *
      * @return true if this map contains no key-value mappings.
      */
     public boolean isEmpty();
@@ -68,11 +68,11 @@ public interface HMap {
      * formally, returns true if and only if this map contains at a mapping for a
      * key k such that (key==null ? k==null : key.equals(k)). (There can be at most
      * one such mapping.)
-     * 
+     *
      * @param key key whose presence in this map is to be tested.
      * @return true if this map contains a mapping for the specified key.
-     * @throws ClassCastException   - if the key is of an inappropriate type for
-     *                              this map (optional).
+     * @throws ClassCastException   if the key is of an inappropriate type for this
+     *                              map (optional).
      * @throws NullPointerException if the key is null and this map does not not
      *                              permit null keys (optional).
      */
@@ -84,12 +84,12 @@ public interface HMap {
      * to a value v such that (value==null ? v==null : value.equals(v)). This
      * operation will probably require time linear in the map size for most
      * implementations of the Map interface.
-     * 
+     *
      * @param value value whose presence in this map is to be tested.
      * @return true if this map maps one or more keys to the specified value.
      * @throws ClassCastException   if the value is of an inappropriate type for
      *                              this map (optional).
-     * @throws NullPointerException - if the value is null and this map does not not
+     * @throws NullPointerException if the value is null and this map does not not
      *                              permit null values (optional).
      */
     public boolean containsValue(Object value) throws ClassCastException, NullPointerException;
@@ -100,11 +100,11 @@ public interface HMap {
      * necessarily indicate that the map contains no mapping for the key; it's also
      * possible that the map explicitly maps the key to null. The containsKey
      * operation may be used to distinguish these two cases
-     *
+     * <p>
      * More formally, if this map contains a mapping from a key k to a value v such
      * that (key==null ? k==null : key.equals(k)), then this method returns v;
      * otherwise it returns null. (There can be at most one such mapping.)
-     * 
+     *
      * @param key key whose associated value is to be returned.
      * @return the value to which this map maps the specified key, or null if the
      *         map contains no mapping for this key.
@@ -112,7 +112,7 @@ public interface HMap {
      *                              map (optional).
      * @throws NullPointerException key is null and this map does not not permit
      *                              null keys (optional).
-     * @see containsKey(Object key)
+     * @see #containsKey(Object)
      */
     public Object get(Object key) throws ClassCastException, NullPointerException;
 
@@ -121,7 +121,7 @@ public interface HMap {
      * operation). If the map previously contained a mapping for this key, the old
      * value is replaced by the specified value. (A map m is said to contain a
      * mapping for a key k if and only if m.containsKey(k) would return true.))
-     * 
+     *
      * @param key   key with which the specified value is to be associated.
      * @param value value to be associated with the specified key.
      * @return previous value associated with specified key, or null if there was no
@@ -153,7 +153,7 @@ public interface HMap {
      * previously associated null with the specified key if the implementation
      * supports null values.) The map will not contain a mapping for the specified
      * key once the call returns.
-     * 
+     *
      * @param key key whose mapping is to be removed from the map.
      * @return previous value associated with specified key, or null if there was no
      *         mapping for key.
@@ -172,7 +172,7 @@ public interface HMap {
      * v) on this map once for each mapping from key k to value v in the specified
      * map. The behavior of this operation is unspecified if the specified map is
      * modified while the operation is in progress.
-     * 
+     *
      * @param t Mappings to be stored in this map.
      * @throws UnsupportedOperationException if the putAll method is not supported
      *                                       by this map.
@@ -192,7 +192,7 @@ public interface HMap {
 
     /**
      * Removes all mappings from this map (optional operation).
-     * 
+     *
      * @throws UnsupportedOperationException clear is not supported by this map.
      */
     public void clear() throws UnsupportedOperationException;
@@ -205,7 +205,7 @@ public interface HMap {
      * which removes the corresponding mapping from the map, via the
      * Iterator.remove, Set.remove, removeAll retainAll, and clear operations. It
      * does not support the add or addAll operations.
-     * 
+     *
      * @return a set view of the keys contained in this map.
      */
     public HSet keySet();
@@ -218,7 +218,7 @@ public interface HMap {
      * supports element removal, which removes the corresponding mapping from the
      * map, via the Iterator.remove, Collection.remove, removeAll, retainAll and
      * clear operations. It does not support the add or addAll operations.
-     * 
+     *
      * @return a collection view of the values contained in this map.
      */
     public HCollection values();
@@ -232,7 +232,7 @@ public interface HMap {
      * mapping from the map, via the Iterator.remove, Set.remove, removeAll,
      * retainAll and clear operations. It does not support the add or addAll
      * operations.
-     * 
+     *
      * @return a set view of the mappings contained in this map.
      */
     public HSet entrySet();
@@ -243,10 +243,10 @@ public interface HMap {
      * formally, two maps t1 and t2 represent the same mappings if
      * t1.entrySet().equals(t2.entrySet()). This ensures that the equals method
      * works properly across different implementations of the Map interface.
-     * 
-     * @override equals in class Object
+     *
      * @param o object to be compared for equality with this map.
      * @return true if the specified object is equal to this map.
+     * @override equals in class Object
      * @see Object#hashCode(),Hashtable
      */
     public boolean equals(Object o);
@@ -256,9 +256,9 @@ public interface HMap {
      * to be the sum of the hashCodes of each entry in the map's entrySet view. This
      * ensures that t1.equals(t2) implies that t1.hashCode()==t2.hashCode() for any
      * two maps t1 and t2, as required by the general contract of Object.hashCode.
-     * 
-     * @override hashCode in class Object
+     *
      * @return the hash code value for this map.
+     * @override hashCode in class Object
      * @see Map.Entry#hashCode(),Object#hashCode(),Object#equals(Object),#equals(Object)
      */
     public int hashCode();

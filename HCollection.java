@@ -63,11 +63,11 @@ public interface HCollection {
      * formally, returns true if and only if this collection contains at least one
      * element e such that (o==null ? e==null : o.equals(e)).
      * 
-     * @param o - element whose presence in this collection is to be tested.
+     * @param o element whose presence in this collection is to be tested.
      * @return true if this collection contains the specified element
-     * @throws ClassCastException   - if the type of the specified element is
+     * @throws ClassCastException   if the type of the specified element is
      *                              incompatible with this collection (optional).
-     * @throws NullPointerException - if the specified element is null and this
+     * @throws NullPointerException if the specified element is null and this
      *                              collection does not support null elements
      *                              (optional).
      */
@@ -121,10 +121,10 @@ public interface HCollection {
      *          stored, if it is big enough; otherwise, a new array of the same
      *          runtime type is allocated for this purpose.
      * @return an array containing the elements of this collection
-     * @throws ArrayStoreException  - the runtime type of the specified array is not
+     * @throws ArrayStoreException  the runtime type of the specified array is not
      *                              a supertype of the runtime type of every element
      *                              in this collection.
-     * @throws NullPointerException - if the specified array is null.
+     * @throws NullPointerException if the specified array is null.
      */
     public Object[] toArray(Object[] a) throws ArrayStoreException, NullPointerException;
 
@@ -143,17 +143,17 @@ public interface HCollection {
      * preserves the invariant that a collection always contains the specified
      * element after this call returns.
      * 
-     * @param o - element whose presence in this collection is to be ensured.
+     * @param o element whose presence in this collection is to be ensured.
      * @return true if this collection changed as a result of the call
-     * @throws UnsupportedOperationException - add is not supported by this
+     * @throws UnsupportedOperationException add is not supported by this
      *                                       collection.
-     * @throws ClassCastException            - class of the specified element
+     * @throws ClassCastException            class of the specified element
      *                                       prevents it from being added to this
      *                                       collection.
-     * @throws NullPointerException          - if the specified element is null and
+     * @throws NullPointerException          if the specified element is null and
      *                                       this collection does not support null
      *                                       elements.
-     * @throws IllegalArgumentException      - some aspect of this element prevents
+     * @throws IllegalArgumentException      some aspect of this element prevents
      *                                       it from being added to this collection.
      */
     public boolean add(Object o)
@@ -167,15 +167,15 @@ public interface HCollection {
      * element (or equivalently, if this collection changed as a result of the
      * call).
      * 
-     * @param o - element to be removed from this collection, if present.
+     * @param o element to be removed from this collection, if present.
      * @return true if this collection changed as a result of the call
-     * @throws ClassCastException            - if the type of the specified element
+     * @throws ClassCastException            if the type of the specified element
      *                                       is incompatible with this collection
      *                                       (optional).
-     * @throws NullPointerException          - if the specified element is null and
+     * @throws NullPointerException          if the specified element is null and
      *                                       this collection does not support null
      *                                       elements (optional).
-     * @throws UnsupportedOperationException - remove is not supported by this
+     * @throws UnsupportedOperationException remove is not supported by this
      *                                       collection.
      */
     public boolean remove(Object o) throws NullPointerException, ClassCastException, UnsupportedOperationException;
@@ -184,16 +184,16 @@ public interface HCollection {
      * Returns true if this collection contains all of the elements in the specified
      * collection.
      * 
-     * @param c - collection to be checked for containment in this collection.
+     * @param c collection to be checked for containment in this collection.
      * @return true if this collection contains all of the elements in the specified
      *         collection
-     * @throws ClassCastException   - if the types of one or more elements in the
+     * @throws ClassCastException   if the types of one or more elements in the
      *                              specified collection are incompatible with this
      *                              collection (optional).
-     * @throws NullPointerException - if the specified collection contains one or
+     * @throws NullPointerException if the specified collection contains one or
      *                              more null elements and this collection does not
      *                              support null elements (optional).
-     * @throws NullPointerException - if the specified collection is null.
+     * @throws NullPointerException if the specified collection is null.
      * @see #contains(Object)
      */
     public boolean containsAll(HCollection c) throws ClassCastException, NullPointerException;
@@ -205,19 +205,19 @@ public interface HCollection {
      * implies that the behavior of this call is undefined if the specified
      * collection is this collection, and this collection is nonempty.)
      * 
-     * @param c - elements to be inserted into this collection.
+     * @param c elements to be inserted into this collection.
      * @return true if this collection changed as a result of the call
-     * @throws UnsupportedOperationException - if this collection does not support
+     * @throws UnsupportedOperationException if this collection does not support
      *                                       the addAll method.
-     * @throws ClassCastException            - if the class of an element of the
+     * @throws ClassCastException            if the class of an element of the
      *                                       specified collection prevents it from
      *                                       being added to this collection.
-     * @throws NullPointerException          - if the specified collection contains
+     * @throws NullPointerException          if the specified collection contains
      *                                       one or more null elements and this
      *                                       collection does not support null
      *                                       elements, or if the specified
      *                                       collection is null.
-     * @throws IllegalArgumentException      - some aspect of an element of the
+     * @throws IllegalArgumentException      some aspect of an element of the
      *                                       specified collection prevents it from
      *                                       being added to this collection.
      * @see #add(Object)
@@ -230,19 +230,19 @@ public interface HCollection {
      * specified collection (optional operation). After this call returns, this
      * collection will contain no elements in common with the specified collection.
      * 
-     * @param c - elements to be removed from this collection.
+     * @param c elements to be removed from this collection.
      * @return true if this collection changed as a result of the call
-     * @throws UnsupportedOperationException - if the removeAll method is not
+     * @throws UnsupportedOperationException if the removeAll method is not
      *                                       supported by this collection.
-     * @throws ClassCastException            - if the types of one or more elements
+     * @throws ClassCastException            if the types of one or more elements
      *                                       in this collection are incompatible
      *                                       with the specified collection
      *                                       (optional).
-     * @throws NullPointerException          - if this collection contains one or
+     * @throws NullPointerException          if this collection contains one or
      *                                       more null elements and the specified
      *                                       collection does not support null
      *                                       elements (optional).
-     * @throws NullPointerException          - if the specified collection is null.
+     * @throws NullPointerException          if the specified collection is null.
      * @see #remove(Object),#contains(Object)
      */
     public boolean removeAll(HCollection c)
@@ -254,19 +254,19 @@ public interface HCollection {
      * collection all of its elements that are not contained in the specified
      * collection.
      * 
-     * @param c - elements to be retained in this collection.
+     * @param c elements to be retained in this collection.
      * @return true if this collection changed as a result of the call
-     * @throws UnsupportedOperationException - if the retainAll method is not
+     * @throws UnsupportedOperationException if the retainAll method is not
      *                                       supported by this Collection.
-     * @throws ClassCastException            - if the types of one or more elements
+     * @throws ClassCastException            if the types of one or more elements
      *                                       in this collection are incompatible
      *                                       with the specified collection
      *                                       (optional).
-     * @throws NullPointerException          - if this collection contains one or
+     * @throws NullPointerException          if this collection contains one or
      *                                       more null elements and the specified
      *                                       collection does not support null
      *                                       elements (optional).
-     * @throws NullPointerException          - if the specified collection is null.
+     * @throws NullPointerException          if the specified collection is null.
      * @see #remove(Object),#contains(Object)
      */
     public boolean retainAll(HCollection c)
@@ -277,7 +277,7 @@ public interface HCollection {
      * collection will be empty after this method returns unless it throws an
      * exception.
      * 
-     * @throws UnsupportedOperationException - if the clear method is not supported
+     * @throws UnsupportedOperationException if the clear method is not supported
      *                                       by this collection.
      */
     public void clear() throws UnsupportedOperationException;
@@ -301,7 +301,7 @@ public interface HCollection {
      * a class that correctly implements both the Set and List interfaces.
      * 
      * @override equals in class Object
-     * @param o - Object to be compared for equality with this collection.
+     * @param o Object to be compared for equality with this collection.
      * @return true if the specified object is equal to this collection
      * @see Object#equals(Object),HSet#equals(Object),HList#equals(Object)
      */

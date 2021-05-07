@@ -37,14 +37,14 @@ public interface HSet extends HCollection {
     /**
      * Returns the number of elements in this set (its cardinality). If this set
      * contains more than Integer.MAX_VALUE elements, returns Integer.MAX_VALUE.
-     * 
+     *
      * @return the number of elements in this set (its cardinality).
      */
     public int size();
 
     /**
      * Returns true if this set contains no elements.
-     * 
+     *
      * @return true if this set contains no elements.
      */
     public boolean isEmpty();
@@ -53,12 +53,12 @@ public interface HSet extends HCollection {
      * Returns true if this set contains the specified element. More formally,
      * returns true if and only if this set contains an element e such that (o==null
      * ? e==null : o.equals(e)).
-     * 
-     * @param o - element whose presence in this set is to be tested.
+     *
+     * @param o element whose presence in this set is to be tested.
      * @return true if this set contains the specified element.
-     * @throws ClassCastException   - if the type of the specified element is
+     * @throws ClassCastException   if the type of the specified element is
      *                              incompatible with this set (optional).
-     * @throws NullPointerException - if the specified element is null and this set
+     * @throws NullPointerException if the specified element is null and this set
      *                              does not support null elements (optional).
      */
     public boolean contains(Object o) throws ClassCastException, NullPointerException;
@@ -67,7 +67,7 @@ public interface HSet extends HCollection {
      * Returns an iterator over the elements in this set. The elements are returned
      * in no particular order (unless this set is an instance of some class that
      * provides a guarantee).
-     * 
+     *
      * @return an iterator over the elements in this set.
      */
     public HIterator iterator();
@@ -75,7 +75,7 @@ public interface HSet extends HCollection {
     /**
      * Returns an array containing all of the elements in this set. Obeys the
      * general contract of the Collection.toArray method.
-     * 
+     *
      * @return an array containing all of the elements in this set.
      */
     public Object[] toArray();
@@ -84,14 +84,14 @@ public interface HSet extends HCollection {
      * Returns an array containing all of the elements in this set; the runtime type
      * of the returned array is that of the specified array. Obeys the general
      * contract of the Collection.toArray(Object[]) method.
-     * 
-     * @param a - the array into which the elements of this set are to be stored, if
+     *
+     * @param a the array into which the elements of this set are to be stored, if
      *          it is big enough; otherwise, a new array of the same runtime type is
      *          allocated for this purpose.
      * @return an array containing the elements of this set.
-     * @throws ArrayStoreException  - the runtime type of a is not a supertype of
-     *                              the runtime type of every element in this set.
-     * @throws NullPointerException - if the specified array is null.
+     * @throws ArrayStoreException  the runtime type of a is not a supertype of the
+     *                              runtime type of every element in this set.
+     * @throws NullPointerException if the specified array is null.
      */
     public Object[] toArray(Object[] a) throws ArrayStoreException, NullPointerException;
 
@@ -107,20 +107,20 @@ public interface HSet extends HCollection {
      * exception, as described in the specification for Collection.add. Individual
      * set implementations should clearly document any restrictions on the the
      * elements that they may contain.
-     * 
-     * @param o - element to be added to this set.
+     *
+     * @param o element to be added to this set.
      * @return true if this set did not already contain the specified element.
-     * @throws UnsupportedOperationException - if the add method is not supported by
+     * @throws UnsupportedOperationException if the add method is not supported by
      *                                       this set.
-     * @throws ClassCastException            - if the class of the specified element
+     * @throws ClassCastException            if the class of the specified element
      *                                       prevents it from being added to this
      *                                       set.
-     * @throws NullPointerException          - if the specified element is null and
+     * @throws NullPointerException          if the specified element is null and
      *                                       this set does not support null
      *                                       elements.
-     * @throws IllegalArgumentException      - if some aspect of the specified
-     *                                       element prevents it from being added to
-     *                                       this set.
+     * @throws IllegalArgumentException      if some aspect of the specified element
+     *                                       prevents it from being added to this
+     *                                       set.
      */
     public boolean add(Object o)
             throws UnsupportedOperationException, ClassCastException, NullPointerException, IllegalArgumentException;
@@ -132,16 +132,15 @@ public interface HSet extends HCollection {
      * contained the specified element (or equivalently, if the set changed as a
      * result of the call). (The set will not contain the specified element once the
      * call returns.)
-     * 
-     * @param o - object to be removed from this set, if present.
+     *
+     * @param o object to be removed from this set, if present.
      * @return true if the set contained the specified element.
-     * @throws ClassCastException            - if the type of the specified element
-     *                                       is incompatible with this set
-     *                                       (optional).
-     * @throws NullPointerException          - if the specified element is null and
+     * @throws ClassCastException            if the type of the specified element is
+     *                                       incompatible with this set (optional).
+     * @throws NullPointerException          if the specified element is null and
      *                                       this set does not support null elements
      *                                       (optional).
-     * @throws UnsupportedOperationException - if the remove method is not supported
+     * @throws UnsupportedOperationException if the remove method is not supported
      *                                       by this set.
      */
     public boolean remove(Object o) throws ClassCastException, NullPointerException, UnsupportedOperationException;
@@ -150,18 +149,18 @@ public interface HSet extends HCollection {
      * Returns true if this set contains all of the elements of the specified
      * collection. If the specified collection is also a set, this method returns
      * true if it is a subset of this set.
-     * 
-     * @param c - collection to be checked for containment in this set.
+     *
+     * @param c collection to be checked for containment in this set.
      * @return true if this set contains all of the elements of the specified
      *         collection.
-     * @throws ClassCastException   - if the types of one or more elements in the
+     * @throws ClassCastException   if the types of one or more elements in the
      *                              specified collection are incompatible with this
      *                              set (optional).
-     * @throws NullPointerException - if the specified collection contains one or
-     *                              more null elements and this set does not support
-     *                              null elements (optional).
-     * @throws NullPointerException - if the specified collection is null.
-     * @see contains(Object)
+     * @throws NullPointerException if the specified collection contains one or more
+     *                              null elements and this set does not support null
+     *                              elements (optional).
+     * @throws NullPointerException if the specified collection is null.
+     * @see #contains(Object)
      */
     public boolean containsAll(HCollection c) throws ClassCastException, NullPointerException;
 
@@ -171,22 +170,22 @@ public interface HSet extends HCollection {
      * a set, the addAll operation effectively modifies this set so that its value
      * is the union of the two sets. The behavior of this operation is unspecified
      * if the specified collection is modified while the operation is in progress.
-     * 
-     * @param c - collection whose elements are to be added to this set.
+     *
+     * @param c collection whose elements are to be added to this set.
      * @return true if this set changed as a result of the call.
-     * @throws UnsupportedOperationException - if the addAll method is not supported
+     * @throws UnsupportedOperationException if the addAll method is not supported
      *                                       by this set.
-     * @throws ClassCastException            - if the class of some element of the
+     * @throws ClassCastException            if the class of some element of the
      *                                       specified collection prevents it from
      *                                       being added to this set.
-     * @throws NullPointerException          - if the specified collection contains
+     * @throws NullPointerException          if the specified collection contains
      *                                       one or more null elements and this set
      *                                       does not support null elements, or if
      *                                       the specified collection is null.
-     * @throws IllegalArgumentException      - if some aspect of some element of the
+     * @throws IllegalArgumentException      if some aspect of some element of the
      *                                       specified collection prevents it from
      *                                       being added to this set.
-     * @see add(Object)
+     * @see #add(Object)
      */
     public boolean addAll(HCollection c)
             throws UnsupportedOperationException, ClassCastException, NullPointerException, IllegalArgumentException;
@@ -197,19 +196,19 @@ public interface HSet extends HCollection {
      * its elements that are not contained in the specified collection. If the
      * specified collection is also a set, this operation effectively modifies this
      * set so that its value is the intersection of the two sets.
-     * 
-     * @param c - collection that defines which elements this set will retain.
+     *
+     * @param c collection that defines which elements this set will retain.
      * @return true if this collection changed as a result of the call.
-     * @throws UnsupportedOperationException - if the retainAll method is not
+     * @throws UnsupportedOperationException if the retainAll method is not
      *                                       supported by this Collection.
-     * @throws ClassCastException            - if the types of one or more elements
-     *                                       in this set are incompatible with the
+     * @throws ClassCastException            if the types of one or more elements in
+     *                                       this set are incompatible with the
      *                                       specified collection (optional).
-     * @throws NullPointerException          - if this set contains a null element
-     *                                       and the specified collection does not
+     * @throws NullPointerException          if this set contains a null element and
+     *                                       the specified collection does not
      *                                       support null elements (optional).
-     * @throws NullPointerException          - if the specified collection is null.
-     * @see remove(Object)
+     * @throws NullPointerException          if the specified collection is null.
+     * @see #remove(Object)
      */
     public boolean retainAll(HCollection c);
 
@@ -218,20 +217,20 @@ public interface HSet extends HCollection {
      * collection (optional operation). If the specified collection is also a set,
      * this operation effectively modifies this set so that its value is the
      * asymmetric set difference of the two sets.
-     * 
-     * @param c - collection that defines which elements will be removed from this
+     *
+     * @param c collection that defines which elements will be removed from this
      *          set.
      * @return true if this set changed as a result of the call.
-     * @throws UnsupportedOperationException - if the removeAll method is not
+     * @throws UnsupportedOperationException if the removeAll method is not
      *                                       supported by this Collection.
-     * @throws ClassCastException            - if the types of one or more elements
-     *                                       in this set are incompatible with the
+     * @throws ClassCastException            if the types of one or more elements in
+     *                                       this set are incompatible with the
      *                                       specified collection (optional).
-     * @throws NullPointerException          - if this set contains a null element
-     *                                       and the specified collection does not
+     * @throws NullPointerException          if this set contains a null element and
+     *                                       the specified collection does not
      *                                       support null elements (optional).
-     * @throws NullPointerException          - if the specified collection is null.
-     * @see remove(Object)
+     * @throws NullPointerException          if the specified collection is null.
+     * @see #remove(Object)
      */
     public boolean removeAll(HCollection c)
             throws UnsupportedOperationException, ClassCastException, NullPointerException;
@@ -239,9 +238,9 @@ public interface HSet extends HCollection {
     /**
      * Removes all of the elements from this set (optional operation). This set will
      * be empty after this call returns (unless it throws an exception).
-     * 
-     * @throws UnsupportedOperationException - if the clear method is not supported
-     *                                       by this set.
+     *
+     * @throws UnsupportedOperationException if the clear method is not supported by
+     *                                       this set.
      */
     public void clear() throws ClassCastException;
 
@@ -252,10 +251,10 @@ public interface HSet extends HCollection {
      * member of this set is contained in the specified set). This definition
      * ensures that the equals method works properly across different
      * implementations of the set interface.
-     * 
-     * @override equals in class Object
-     * @param o - Object to be compared for equality with this set.
+     *
+     * @param o Object to be compared for equality with this set.
      * @return true if the specified Object is equal to this set.
+     * @override equals in class Object
      * @see Object#hashCode(),Hashtable
      */
     public boolean equals(Object o);
@@ -266,9 +265,9 @@ public interface HSet extends HCollection {
      * hashcode of a null element is defined to be zero. This ensures that
      * s1.equals(s2) implies that s1.hashCode()==s2.hashCode() for any two sets s1
      * and s2, as required by the general contract of the Object.hashCode method.
-     * 
-     * @override hashCode in class Object
+     *
      * @return the hash code value for this set.
+     * @override hashCode in class Object
      */
     public int hashCode();
 }

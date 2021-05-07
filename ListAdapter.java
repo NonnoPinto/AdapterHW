@@ -7,23 +7,43 @@ import java.util.Vector;
 
 public class ListAdapter implements HList{
 
-    private Vector<Object> myVec;
+    private Vector myVec;
+    private Subber sub;
 
-    public ListAdapter(){}
+    //default constructor
+    public ListAdapter(){
+        myVec = new Vector();
+        sub = null;
+    }
 
-    public ListAdapter(Vector<Object> a){
+    //copy constructor
+    public ListAdapter(ListAdapter list){
+        myVec = list.myVec;
+        sub = null;
+    }
+
+    //costructor
+    public ListAdapter(Vector a){
+        myVec = new Vector();
         for (int i = 0; i < a.size(); i ++)
-            myVec.add(a.elementAt(i));
+            myVec.addElement(a.elementAt(i));
+        sub = null;
+    }
+
+    //subList helper constructor
+    public ListAdapter(int from, int to, ListAdapter l, Vector a){
+        myVec = l.myVec;
+        sub = new Subber(from, to, l);
     }
 
     @Override
     public int size() {
-        return myVec.size();
+        return this.myVec.size();
     }
 
     @Override
     public boolean isEmpty() {
-        return myVec.isEmpty();
+        return this.myVec.isEmpty();
     }
 
     @Override
@@ -31,19 +51,19 @@ public class ListAdapter implements HList{
         if (o == null)
             throw new NullPointerException();
         
-        return myVec.contains(o);
+        return this.myVec.contains(o);
     }
 
     @Override
     public HIterator iterator() {
-        // TODO Auto-generated method stub
-        return null;
+        IteratorAdapter iter = new IteratorAdapter(this);
+        return iter;
     }
 
     @Override
     public Object[] toArray() {
-        Object[] myArray = new Object[myVec.size()];
-        myVec.copyInto(myArray);
+        Object[] myArray = new Object[this.myVec.size()];
+        this.myVec.copyInto(myArray);
         return myArray;
     }
 
@@ -52,10 +72,10 @@ public class ListAdapter implements HList{
         if (a==null)
             throw new NullPointerException();
         
-        if (a.length < myVec.size())
-            a = new Object[myVec.size()];
+        if (a.length < this.myVec.size())
+            a = new Object[this.myVec.size()];
         
-        myVec.copyInto(a);
+        this.myVec.copyInto(a);
         
         return a;
     }
@@ -65,7 +85,7 @@ public class ListAdapter implements HList{
         if (o == null)
             throw new NullPointerException();
                
-        myVec.addElement(o);
+        this.myVec.addElement(o);
         return true;
     }
 
@@ -74,18 +94,18 @@ public class ListAdapter implements HList{
         if (o == null)
             throw new NullPointerException();
 
-        return myVec.removeElement(o);
+        return this.myVec.removeElement(o);
     }
 
     @Override
     public boolean containsAll(HCollection c) {
         if (c.contains(null) || c == null) //here and in similar piece of code the check "c.contains(null)" isnt really usefull: add doesnt accept "null" as argoument                                            
-            throw new NullPointerException(); //but myVec way prevent myVec integrity
+            throw new NullPointerException(); //but this.myVec way prevent this.myVec integrity
         
         HIterator tmp = c.iterator();
 
         while(tmp.hasNext())
-            if (!(myVec.contains(tmp.next())))
+            if (!(this.myVec.contains(tmp.next())))
                 return false;
 
         return true;
@@ -101,7 +121,7 @@ public class ListAdapter implements HList{
         HIterator tmp = c.iterator();
 
         while(tmp.hasNext())
-            c.add(tmp.next());
+            this.myVec.addElement(tmp.next());
         
         return true;
     }
@@ -110,14 +130,14 @@ public class ListAdapter implements HList{
     public boolean addAll(int index, HCollection c) {
         if (c.contains(null))
             throw new NullPointerException();
-        else if (index < 0 || index > myVec.size())
+        else if (index < 0 || index > this.myVec.size())
             throw new IndexOutOfBoundsException();
         else if (c == null)
             return false;
 
         HIterator tmp = c.iterator();
         while (tmp.hasNext()){
-            myVec.insertElementAt(tmp.next(), index);
+            this.myVec.insertElementAt(tmp.next(), index);
             index++;
         }
 
@@ -129,12 +149,12 @@ public class ListAdapter implements HList{
         if (c.contains(null) || c == null)
             throw new NullPointerException();
         
-        int oldSize = myVec.size(); //save old size
+        int oldSize = this.myVec.size(); //save old size
         HIterator tmp = c.iterator();
         while (tmp.hasNext())       //...removing...
-            myVec.remove(tmp.next());
+            this.myVec.remove(tmp.next());
         
-        if (myVec.size() == oldSize)    //if it has still the same size, nothing has been deleted
+        if (this.myVec.size() == oldSize)    //if it has still the same size, nothing has been deleted
             return false;
         
         return true;
@@ -145,19 +165,16 @@ public class ListAdapter implements HList{
         if (c.contains(null) || c == null)
             throw new NullPointerException();
         
-        int oldSize = myVec.size(); //save old size
-
-        Vector<Object> tmpVec = new Vector<Object>();
+        int oldSize = this.myVec.size(); //save old size
 
         HIterator tmp = c.iterator();
         while (tmp.hasNext()){
             Object elem = tmp.next();
-            if (myVec.contains(elem)){
-                tmpVec.add(elem);
-            }
+            if (!(this.myVec.contains(elem)))
+                this.myVec.removeElement(elem);
         }
 
-        if (myVec.size() == oldSize)    //if it has still the same size, nothing has been deleted
+        if (this.myVec.size() == oldSize)    //if it has still the same size, nothing has been deleted
             return false;
         
         return true;
@@ -165,26 +182,26 @@ public class ListAdapter implements HList{
 
     @Override
     public void clear() {
-        myVec.removeAllElements();
+        this.myVec.removeAllElements();
     }
 
     @Override
     public Object get(int index) {
-        if (index < 0 || index > myVec.size())
+        if (index < 0 || index > this.myVec.size())
             throw new IndexOutOfBoundsException();
         
-        return myVec.elementAt(index);
+        return this.myVec.elementAt(index);
     }
 
     @Override
     public Object set(int index, Object element) {
         if (element == null)
             throw new NullPointerException();
-        else if (index < 0 || index > myVec.size())
+        else if (index < 0 || index > this.myVec.size())
             throw new IndexOutOfBoundsException();
         
-        Object old = myVec.elementAt(index);
-        myVec.setElementAt(element, index);
+        Object old = this.myVec.elementAt(index);
+        this.myVec.setElementAt(element, index);
 
         return old;
     }
@@ -193,19 +210,19 @@ public class ListAdapter implements HList{
     public void add(int index, Object element) {
         if (element == null)
             throw new NullPointerException();
-        else if (index < 0 || index > myVec.size())
+        else if (index < 0 || index > this.myVec.size())
             throw new IndexOutOfBoundsException();
 
-        myVec.insertElementAt(element, index);
+        this.myVec.insertElementAt(element, index);
     }
 
     @Override
     public Object remove(int index) {
-        if (index < 0 || index > myVec.size())
+        if (index < 0 || index > this.myVec.size())
             throw new IndexOutOfBoundsException();
         
-        Object old = myVec.elementAt(index);
-        myVec.removeElementAt(index);
+        Object old = this.myVec.elementAt(index);
+        this.myVec.removeElementAt(index);
         
         return old;
     }
@@ -215,7 +232,7 @@ public class ListAdapter implements HList{
         if (o == null)
             throw new NullPointerException();
     
-        return myVec.indexOf(o);
+        return this.myVec.indexOf(o);
     }
 
     @Override
@@ -224,8 +241,8 @@ public class ListAdapter implements HList{
             throw new NullPointerException();
         
         int in = -1;
-        for (int i = 0; i < myVec.size(); i++)
-            if (o == myVec.elementAt(i))
+        for (int i = 0; i < this.myVec.size(); i++)
+            if (o == this.myVec.elementAt(i))
                 in = i;
         
         return in;
@@ -233,63 +250,85 @@ public class ListAdapter implements HList{
 
     @Override
     public HListIterator listIterator() {
-        // TODO Auto-generated method stub
-        return null;
+        ListIteratorAdapter iter = new ListIteratorAdapter(this);
+        return iter;
     }
 
     @Override
     public HListIterator listIterator(int index) {
-        // TODO Auto-generated method stub
+        if (index < 0 || index > this.myVec.size())
+            throw new IndexOutOfBoundsException();
+
+        ListIteratorAdapter iter = new ListIteratorAdapter(this);
+        
+        for (int i = 0; i < index; i++)
+            iter.next();
+
         return null;
     }
 
     @Override
     public HList subList(int fromIndex, int toIndex) {
-        // TODO Auto-generated method stub
-        return null;
+        if (fromIndex < 0 || toIndex > this.myVec.size() || fromIndex > toIndex)
+            throw new IndexOutOfBoundsException();
+
+        Vector subVec = new Vector();
+        
+        for (int i = fromIndex; i < toIndex; i++)
+            subVec.addElement(this.myVec.elementAt(i));
+
+        ListAdapter sub = new ListAdapter(fromIndex, toIndex, this, subVec);
+
+        return sub;
     }
     
     @Override
     public int hashCode(){
-        /*int hashCode = 1;
-        Iterator i = list.iterator();
+        int hashCode = 1;
+        HIterator i = this.iterator();
         while (i.hasNext()) {
             Object obj = i.next();
             hashCode = 31*hashCode + (obj==null ? 0 : obj.hashCode());
         }
-        return hashCode;*/
-        return -1;
+        return hashCode;
     }
     
     @Override
     public boolean equals(Object o){
-        // TODO Auto-generated method stub
-
+        if(o instanceof ListAdapter){
+            HIterator myTmp = this.iterator();
+            HIterator tmp = ((ListAdapter)o).iterator();
+            while (myTmp.hasNext() && tmp.hasNext())
+                if (myTmp.next() != tmp.next())
+                        return false;
+        }
+        else
+            return false;
         return true;
     }
     
     private class IteratorAdapter implements HIterator{
         private int index;
-        private boolean next = false;
-        
-        IteratorAdapter(){
-            index = -1;
-        }
+        private boolean next;
+        ListAdapter list;
 
-        IteratorAdapter(Vector<Object> vec){
+        IteratorAdapter(ListAdapter l){
+            list = new ListAdapter(l);
             index = -1;
+            next = false;
         }
 
         public boolean hasNext(){
-            return (index < myVec.size());
+            return (index < list.myVec.size());
         }
 
         public Object next(){
-            if (index == myVec.size())
+            if (index == list.myVec.size())
                 throw new NoSuchElementException();
+            
             next = true;
 
-            return myVec.elementAt(index++);
+            return list.myVec.elementAt(index++);
         }
 
         public void remove(){
@@ -297,7 +336,7 @@ public class ListAdapter implements HList{
                 throw new IllegalStateException();
             
             next = false;
-            myVec.removeElementAt(index);
+            list.myVec.removeElementAt(index);
             index--;
         }
     }
@@ -305,22 +344,25 @@ public class ListAdapter implements HList{
     private class ListIteratorAdapter implements HListIterator{
         
         IteratorAdapter iter;
-        private boolean check = false;
+        private boolean check;
 
-        ListIteratorAdapter(){
+        ListIteratorAdapter(ListAdapter l){
+            iter = new IteratorAdapter(l);
+            check = false;
         }
 
-        ListIteratorAdapter(IteratorAdapter i){
-            iter = i;
-        }
+        /*ListIteratorAdapter(IteratorAdapter l){
+            iter = new IteratorAdapter(l.list);
+            check = false;
+        }*/
 
         public void add(Object o){
             check = false;
-            myVec.insertElementAt(o, this.iter.index++);
+            this.iter.list.myVec.insertElementAt(o, this.iter.index++);
         }
           
         public boolean hasNext(){
-            return (this.iter.index < myVec.size());
+            return (this.iter.index < this.iter.list.myVec.size());
         }
                 
         public boolean hasPrevious(){
@@ -334,7 +376,7 @@ public class ListAdapter implements HList{
                 
         public int nextIndex(){
             int myIndex;
-            if (this.iter.index==myVec.size())
+            if (this.iter.index==this.iter.list.myVec.size())
                 myIndex = this.iter.index;
             else
                 myIndex = this.iter.index+1;
@@ -345,9 +387,10 @@ public class ListAdapter implements HList{
         public Object previous(){
             if (this.iter.index == 0)
                 throw new NoSuchElementException();
-            check = true;
             
-            return (myVec.elementAt(this.iter.index--));
+                check = true;
+            
+            return (this.iter.list.myVec.elementAt(this.iter.index--));
         }
                 
         public int previousIndex(){
@@ -366,7 +409,7 @@ public class ListAdapter implements HList{
             
             check = false;
             
-            myVec.removeElementAt(this.iter.index);
+            this.iter.list.myVec.removeElementAt(this.iter.index);
         }
                 
         public void set(Object o){
@@ -375,7 +418,19 @@ public class ListAdapter implements HList{
             
             check = false;
 
-            myVec.setElementAt(o, this.iter.index);
+            this.iter.list.myVec.setElementAt(o, this.iter.index);
+        }
+    }
+
+    private class Subber{
+        protected int from;
+        protected int to;
+        ListAdapter original;
+        
+        Subber (int f, int t, ListAdapter o){
+            from = f;
+            to = t;
+            original = o;
         }
     }
 }

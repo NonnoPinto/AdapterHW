@@ -24,7 +24,7 @@ public interface HIterator {
      * Returns the next element in the iteration.
      * 
      * @return the next element in the iteration.
-     * @throws NoSuchElementException - if the iteration has no more elements.
+     * @throws NoSuchElementException if the iteration has no more elements.
      */
     public Object next();
 
@@ -36,11 +36,11 @@ public interface HIterator {
      * than by calling this method, unless an overriding class has specified a
      * concurrent modification policy
      * 
-     * @throws IllegalStateException         - if the next method has not yet been
+     * @throws IllegalStateException         if the next method has not yet been
      *                                       called, or the remove method has
      *                                       already been called after the last call
      *                                       to the next method.
-     * @throws UnsupportedOperationException - if the remove operation is not
+     * @throws UnsupportedOperationException if the remove operation is not
      *                                       supported by this iterator.
      */
     public void remove();

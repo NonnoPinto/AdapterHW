@@ -27,13 +27,13 @@ public interface HListIterator extends HIterator {
      * previous would return the new element. (This call increases by one the value
      * that would be returned by a call to nextIndex or previousIndex.)
      *
-     * @param o - the element to insert.
-     * @throws UnsupportedOperationException - if the add method is not supported by
+     * @param o the element to insert.
+     * @throws UnsupportedOperationException if the add method is not supported by
      *                                       this list iterator.
-     * @throws ClassCastException            - if the class of the specified element
+     * @throws ClassCastException            if the class of the specified element
      *                                       prevents it from being added to this
      *                                       list.
-     * @throws IllegalArgumentException      - if some aspect of this element
+     * @throws IllegalArgumentException      if some aspect of this element
      *                                       prevents it from being added to this
      *                                       list.
      */
@@ -66,7 +66,7 @@ public interface HListIterator extends HIterator {
      * element repeatedly.)
      *
      * @return the next element in the list
-     * @throws NoSuchElementException - if the iteration has no next element.
+     * @throws NoSuchElementException if the iteration has no next element.
      */
     public Object next() throws NoSuchElementException;
 
@@ -86,7 +86,7 @@ public interface HListIterator extends HIterator {
      * will return the same element repeatedly.)
      *
      * @return the previous element in the list.
-     * @throws NoSuchElementException - if the iteration has no previous element.
+     * @throws NoSuchElementException if the iteration has no previous element.
      */
     public Object previous() throws NoSuchElementException;
 
@@ -106,9 +106,9 @@ public interface HListIterator extends HIterator {
      * previous. It can be made only if ListIterator.add has not been called after
      * the last call to next or previous.
      *
-     * @throws UnsupportedOperationException - if the remove operation is not
+     * @throws UnsupportedOperationException if the remove operation is not
      *                                       supported by this list iterator.
-     * @throws IllegalStateException         - neither next nor previous have been
+     * @throws IllegalStateException         neither next nor previous have been
      *                                       called, or remove or add have been
      *                                       called after the last call to * next or
      *                                       previous.
@@ -121,17 +121,17 @@ public interface HListIterator extends HIterator {
      * ListIterator.remove nor ListIterator.add have been called after the last call
      * to next or previous.
      *
-     * @param o - the element with which to replace the last element returned by
+     * @param o the element with which to replace the last element returned by
      *          next or previous.
-     * @throws UnsupportedOperationException - if the set operation is not supported
+     * @throws UnsupportedOperationException if the set operation is not supported
      *                                       by this list iterator.
-     * @throws ClassCastException            - if the class of the specified element
+     * @throws ClassCastException            if the class of the specified element
      *                                       prevents it from being added to this
      *                                       list.
-     * @throws IllegalArgumentException      - if some aspect of the specified
+     * @throws IllegalArgumentException      if some aspect of the specified
      *                                       element prevents it from being added to
      *                                       this list.
-     * @throws IllegalStateException         - if neither next nor previous have
+     * @throws IllegalStateException         if neither next nor previous have
      *                                       been called, or remove or add have been
      *                                       called after the last call to next or
      *                                       previous.
