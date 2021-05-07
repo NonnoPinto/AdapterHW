@@ -105,7 +105,7 @@ public class ListAdapter implements HList{
         HIterator tmp = c.iterator();
 
         while(tmp.hasNext())
-            if (!(this.myVec.contains(tmp.next())))
+            if (!(this.myVec.contains(tmp.next()))) //when a single element doesnt match, return false
                 return false;
 
         return true;
@@ -167,11 +167,12 @@ public class ListAdapter implements HList{
         
         int oldSize = this.myVec.size(); //save old size
 
-        HIterator tmp = c.iterator();
+        HIterator tmp = this.iterator();
+        
         while (tmp.hasNext()){
             Object elem = tmp.next();
-            if (!(this.myVec.contains(elem)))
-                this.myVec.removeElement(elem);
+            if (!(c.contains(elem)))   //if HCollection c list doesnt have that element
+                this.myVec.removeElement(elem); //then remove it from this list
         }
 
         if (this.myVec.size() == oldSize)    //if it has still the same size, nothing has been deleted
@@ -200,8 +201,8 @@ public class ListAdapter implements HList{
         else if (index < 0 || index > this.myVec.size())
             throw new IndexOutOfBoundsException();
         
-        Object old = this.myVec.elementAt(index);
-        this.myVec.setElementAt(element, index);
+        Object old = this.myVec.elementAt(index);   //saving the old element
+        this.myVec.setElementAt(element, index);    //setting the new one
 
         return old;
     }
@@ -221,8 +222,8 @@ public class ListAdapter implements HList{
         if (index < 0 || index > this.myVec.size())
             throw new IndexOutOfBoundsException();
         
-        Object old = this.myVec.elementAt(index);
-        this.myVec.removeElementAt(index);
+        Object old = this.myVec.elementAt(index);   //saving old element, since remove from J2SE 1.1 is void
+        this.myVec.removeElementAt(index);          //...removing...
         
         return old;
     }
@@ -295,16 +296,17 @@ public class ListAdapter implements HList{
     
     @Override
     public boolean equals(Object o){
-        if(o instanceof ListAdapter){
+        if(o instanceof ListAdapter){   // o is istnace of ListAdpter
             HIterator myTmp = this.iterator();
             HIterator tmp = ((ListAdapter)o).iterator();
-            while (myTmp.hasNext() && tmp.hasNext())
+            while (myTmp.hasNext() && tmp.hasNext())    //if a single element doesnt match, return false
                 if (myTmp.next() != tmp.next())
                         return false;
         }
-        else
+        else                            //o !(istance of) ListAdapter
             return false;
-        return true;
+
+        return true;                    //o is istance of ListAdapter AND all elements match at the same position
     }
     
     private class IteratorAdapter implements HIterator{
