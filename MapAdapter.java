@@ -1,25 +1,20 @@
 package myAdapter;
 
-import java.util.Enumeration;
-import java.util.Hashtable;
+import java.util.*;
 
 public class MapAdapter implements HMap {
-    
-    private Enumeration keys;
-    private Enumeration values;
+
+    // private Object key;
+    // private Object value;
     private Hashtable hash;
-    
-    //default contructor
-    public MapAdapter(){
-        keys = new Enumeration();
-        values = new Enumeration();
+
+    // default contructor
+    public MapAdapter() {
         hash = new Hashtable();
     }
 
-    //copy construcor
-    public MapAdapter(MapAdapter m){
-        keys = m.keys;
-        values = m.values;
+    // copy construcor
+    public MapAdapter(MapAdapter m) {
         hash = m.hash;
     }
 
@@ -34,45 +29,61 @@ public class MapAdapter implements HMap {
     }
 
     @Override
-    public boolean containsKey(Object key){
-        // TODO Auto-generated method stub
-        return false;
+    public boolean containsKey(Object key) {
+        if (key == null)
+            throw new NullPointerException();
+
+        return this.hash.containsKey(key);
     }
 
     @Override
-    public boolean containsValue(Object value){
-        // TODO Auto-generated method stub
-        return false;
+    public boolean containsValue(Object value) {
+        if (value == null)
+            throw new NullPointerException();
+
+        return this.hash.containsValue(value);
     }
 
     @Override
-    public Object get(Object key){
-        // TODO Auto-generated method stub
-        return null;
+    public Object get(Object key) {
+        if (key == null)
+            throw new NullPointerException();
+
+        return this.hash.get(key);
     }
 
     @Override
-    public Object put(Object key, Object value){
-        // TODO Auto-generated method stub
-        return null;
+    public Object put(Object key, Object value) {
+        if (key == null || value == null)
+            throw new NullPointerException();
+
+        return this.hash.put(key, value);
     }
 
     @Override
     public Object remove(Object key) {
-        // TODO Auto-generated method stub
-        return null;
+        if (key == null)
+            throw new NullPointerException();
+
+        return this.hash.remove(key);
     }
 
     @Override
-    public void putAll(HMap t){
-        // TODO Auto-generated method stub
-        
+    public void putAll(HMap t) {
+        // keys
+        HSet oldKeys = t.keySet();
+        HIterator i = oldKeys.iterator();
+        // values
+        HCollection oldValues = t.values();
+        HIterator v = oldValues.iterator();
+
+        while (i.hasNext() && v.hasNext())
+            this.put(i.next(), v.next());
     }
 
     @Override
     public void clear() {
-        // TODO Auto-generated method stub
-        
+        this.clear();
     }
 
     @Override
@@ -94,14 +105,115 @@ public class MapAdapter implements HMap {
     }
 
     @Override
-    public boolean equals(Object o){
+    public boolean equals(Object o) {
+        if (!(o instanceof MapAdapter)) // o !istanceOf MapAdapter
+            return false;
+        else { // o istanceOF MapAdapter
+        }
         // TODO Auto-generated method stub
-        return false;
+        return true;
     }
 
-    public int hashCode(){
+    public int hashCode() {
         // TODO Auto-generated method stub
         return -1;
     }
-    
+
+    private class SetAdapter implements HSet {
+
+        private Vector mySet;
+
+        public SetAdapter() {
+            mySet = null;
+        }
+
+        public SetAdapter(SetAdapter s) {
+            mySet = s.mySet;
+        }
+
+        @Override
+        public int size() {
+            return mySet.size();
+        }
+
+        @Override
+        public boolean isEmpty() {
+            return mySet.isEmpty();
+        }
+
+        @Override
+        public boolean contains(Object o) {
+            // TODO Auto-generated method stub
+            return false;
+        }
+
+        @Override
+        public HIterator iterator() {
+            // TODO Auto-generated method stub
+            return null;
+        }
+
+        @Override
+        public Object[] toArray() {
+            // TODO Auto-generated method stub
+            return null;
+        }
+
+        @Override
+        public Object[] toArray(Object[] a) throws ArrayStoreException, NullPointerException {
+            // TODO Auto-generated method stub
+            return null;
+        }
+
+        @Override
+        public boolean add(Object o) throws UnsupportedOperationException, ClassCastException, NullPointerException,
+                IllegalArgumentException {
+            // TODO Auto-generated method stub
+            return false;
+        }
+
+        @Override
+        public boolean remove(Object o) throws ClassCastException, NullPointerException, UnsupportedOperationException {
+            // TODO Auto-generated method stub
+            return false;
+        }
+
+        @Override
+        public boolean containsAll(HCollection c) throws ClassCastException, NullPointerException {
+            // TODO Auto-generated method stub
+            return false;
+        }
+
+        @Override
+        public boolean addAll(HCollection c) throws UnsupportedOperationException, ClassCastException,
+                NullPointerException, IllegalArgumentException {
+            // TODO Auto-generated method stub
+            return false;
+        }
+
+        @Override
+        public boolean retainAll(HCollection c) {
+            // TODO Auto-generated method stub
+            return false;
+        }
+
+        @Override
+        public boolean removeAll(HCollection c)
+                throws UnsupportedOperationException, ClassCastException, NullPointerException {
+            // TODO Auto-generated method stub
+            return false;
+        }
+
+        @Override
+        public void clear() throws ClassCastException {
+            // TODO Auto-generated method stub
+
+        }
+
+    }
+
+    /*
+     * private class EntryAdapter implements MapAdapter{ DA
+     * CAPIRE************************ }
+     */
 }

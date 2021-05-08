@@ -48,6 +48,7 @@ import java.util.*;
  */
 
 public interface HMap {
+
     /**
      * Returns the number of key-value mappings in this map. If the map contains
      * more than Integer.MAX_VALUE elements, returns Integer.MAX_VALUE.
