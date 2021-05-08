@@ -5,16 +5,25 @@ import java.util.*;
 public class MapAdapter implements HMap {
 
     private Hashtable hash;
-
+    private MapAdapter clone;
+    
     // default contructor
     public MapAdapter() {
         hash = new Hashtable();
+        clone = null;
     }
 
     // copy construcor
     public MapAdapter(MapAdapter m) {
         hash = m.hash;
+        clone = null;
     }
+
+    // helerp construcotr for backing
+    /*public MapAdapter(MapAdapter original, Hashtable entrySet){
+        hash = entrySet;
+        clone = null; *************C'E' QUALCOSA CHE MI SFUGGE****************
+    }*/
 
     @Override
     public int size() {
@@ -134,6 +143,28 @@ public class MapAdapter implements HMap {
         return myHashCode;
     }
 
+    private class IteratorAdapter implements HIterator {
+        private int index;
+        private boolean next;
+        MapAdapter map;
+
+        IteratorAdapter(MapAdapter m) {
+            map = new MapAdapter(m);
+            index = -1;
+        }
+
+        public boolean hasNext() {
+            return false;
+        }
+
+        public Object next() {
+            return null;
+        }
+
+        public void remove() {
+        }
+    }
+
     private class SetAdapter implements HSet {
 
         private Vector mySet;
@@ -158,8 +189,10 @@ public class MapAdapter implements HMap {
 
         @Override
         public boolean contains(Object o) {
-            // TODO Auto-generated method stub
-            return false;
+            if (o == null)
+                throw new NullPointerException();
+            
+            return this.mySet.contains(o);
         }
 
         @Override
@@ -170,38 +203,37 @@ public class MapAdapter implements HMap {
 
         @Override
         public Object[] toArray() {
+            Object[] tmp = new Object[this.mySet.size()];
+            this.mySet.copyInto(tmp);
+            return tmp;
+        }
+
+        @Override
+        public Object[] toArray(Object[] a) {
             // TODO Auto-generated method stub
             return null;
         }
 
         @Override
-        public Object[] toArray(Object[] a) throws ArrayStoreException, NullPointerException {
-            // TODO Auto-generated method stub
-            return null;
-        }
-
-        @Override
-        public boolean add(Object o) throws UnsupportedOperationException, ClassCastException, NullPointerException,
-                IllegalArgumentException {
+        public boolean add(Object o) {
             // TODO Auto-generated method stub
             return false;
         }
 
         @Override
-        public boolean remove(Object o) throws ClassCastException, NullPointerException, UnsupportedOperationException {
+        public boolean remove(Object o){
             // TODO Auto-generated method stub
             return false;
         }
 
         @Override
-        public boolean containsAll(HCollection c) throws ClassCastException, NullPointerException {
+        public boolean containsAll(HCollection c) {
             // TODO Auto-generated method stub
             return false;
         }
 
         @Override
-        public boolean addAll(HCollection c) throws UnsupportedOperationException, ClassCastException,
-                NullPointerException, IllegalArgumentException {
+        public boolean addAll(HCollection c) {
             // TODO Auto-generated method stub
             return false;
         }
@@ -213,16 +245,14 @@ public class MapAdapter implements HMap {
         }
 
         @Override
-        public boolean removeAll(HCollection c)
-                throws UnsupportedOperationException, ClassCastException, NullPointerException {
+        public boolean removeAll(HCollection c) {
             // TODO Auto-generated method stub
             return false;
         }
 
         @Override
-        public void clear() throws ClassCastException {
-            // TODO Auto-generated method stub
-
+        public void clear() {
+            this.clear();
         }
 
     }
@@ -258,18 +288,6 @@ public class MapAdapter implements HMap {
         public int hashCode(){
             // TODO Auto-generated method stub
             return -1;
-        }
-    }
-        
-
-    private class Subber {
-        
-        Hashtable hash;
-        MapAdapter original;
-
-        Subber(Hashtable entry, MapAdapter o) {
-            hash = new Hashtable();
-            original = o;
         }
     }
 }
