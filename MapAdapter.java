@@ -4,8 +4,6 @@ import java.util.*;
 
 public class MapAdapter implements HMap {
 
-    // private Object key;
-    // private Object value;
     private Hashtable hash;
 
     // default contructor
@@ -83,7 +81,7 @@ public class MapAdapter implements HMap {
 
     @Override
     public void clear() {
-        this.clear();
+        this.hash.clear();
     }
 
     @Override
@@ -109,14 +107,31 @@ public class MapAdapter implements HMap {
         if (!(o instanceof MapAdapter)) // o !istanceOf MapAdapter
             return false;
         else { // o istanceOF MapAdapter
+               // my Map
+            HIterator myIter = (this.entrySet()).iterator();
+            // argoument map
+            HIterator oIter = (((MapAdapter) o).entrySet()).iterator();
+
+            // comparing Map.Entry
+            while (myIter.hasNext() && oIter.hasNext())
+                if (!(myIter.next().equals(oIter.next())))
+                    return false;
+
+            // both ended?
+            if (myIter.hasNext() || oIter.hasNext())
+                return false;
         }
-        // TODO Auto-generated method stub
         return true;
     }
 
     public int hashCode() {
-        // TODO Auto-generated method stub
-        return -1;
+        int myHashCode = 0;
+        HIterator myIter = (this.entrySet()).iterator();
+
+        while (myIter.hasNext())
+            myHashCode += myIter.next().hashCode();
+
+        return myHashCode;
     }
 
     private class SetAdapter implements HSet {
@@ -212,8 +227,49 @@ public class MapAdapter implements HMap {
 
     }
 
-    /*
-     * private class EntryAdapter implements MapAdapter{ DA
-     * CAPIRE************************ }
-     */
+    
+    private class EntryAdapter implements Map.Entry{
+
+        @Override
+        public Object getKey() {
+            // TODO Auto-generated method stub
+            return null;
+        }
+
+        @Override
+        public Object getValue() {
+            // TODO Auto-generated method stub
+            return null;
+        }
+
+        @Override
+        public Object setValue(Object value) {
+            // TODO Auto-generated method stub
+            return null;
+        }
+
+        @Override
+        public boolean equals(Object o){
+            // TODO Auto-generated method stub
+            return false;
+        }
+
+        @Override
+        public int hashCode(){
+            // TODO Auto-generated method stub
+            return -1;
+        }
+    }
+        
+
+    private class Subber {
+        
+        Hashtable hash;
+        MapAdapter original;
+
+        Subber(Hashtable entry, MapAdapter o) {
+            hash = new Hashtable();
+            original = o;
+        }
+    }
 }
