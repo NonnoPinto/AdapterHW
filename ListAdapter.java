@@ -90,6 +90,8 @@ public class ListAdapter implements HList {
     public Object[] toArray(Object[] a) {
         if (a == null)
             throw new NullPointerException();
+        if (!(a instanceof Object[]))
+            throw new ArrayStoreException();
 
         if (a.length < this.myVec.size())
             a = new Object[this.myVec.size()];
@@ -163,7 +165,8 @@ public class ListAdapter implements HList {
             throw new NullPointerException();
         else if (c == null)
             return false;
-
+    
+        int oldSize;
         // check if this ListAdapater has a sublist
         // if true, also sublist is modified
         if (this.clone != null)
@@ -176,9 +179,12 @@ public class ListAdapter implements HList {
             }
 
         // add to list
+        oldSize = this.myVec.size(); // save old size
         HIterator tmp = c.iterator();
         while (tmp.hasNext())
             this.myVec.addElement(tmp.next());
+        if (this.myVec.size() == oldSize) // if it has still the same size, nothing has been deleted
+            return false;
 
         return true;
     }
@@ -191,7 +197,8 @@ public class ListAdapter implements HList {
             throw new IndexOutOfBoundsException();
         else if (c == null)
             return false;
-
+        
+        int oldSize;
         if (this.clone != null && index < this.clone.myVec.size() && index > this.clone.sub.from) {
             HIterator tmpSub = c.iterator();
             while (tmpSub.hasNext()) {
@@ -200,12 +207,14 @@ public class ListAdapter implements HList {
                 this.clone.sub.to++;
             }
         }
-
+        oldSize = this.myVec.size(); // save old size
         HIterator tmp = c.iterator();
         while (tmp.hasNext()) {
             this.myVec.insertElementAt(tmp.next(), index);
             index++;
         }
+        if (this.myVec.size() == oldSize) // if it has still the same size, nothing has been deleted
+            return false;
 
         return true;
     }
@@ -495,11 +504,6 @@ public class ListAdapter implements HList {
             iter = new IteratorAdapter(l);
             check = false;
         }
-
-        /*
-         * ListIteratorAdapter(IteratorAdapter l){ iter = new IteratorAdapter(l.list);
-         * check = false; }
-         */
 
         public void add(Object o) {
             check = false;

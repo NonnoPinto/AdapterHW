@@ -6,7 +6,7 @@ public class MapAdapter implements HMap {
 
     private Hashtable hash;
     private MapAdapter clone;
-    
+
     // default contructor
     public MapAdapter() {
         hash = new Hashtable();
@@ -20,10 +20,10 @@ public class MapAdapter implements HMap {
     }
 
     // helerp construcotr for backing
-    /*public MapAdapter(MapAdapter original, Hashtable entrySet){
-        hash = entrySet;
-        clone = null; *************C'E' QUALCOSA CHE MI SFUGGE****************
-    }*/
+    /*
+     * public MapAdapter(MapAdapter original, Hashtable entrySet){ hash = entrySet;
+     * clone = null; *************C'E' QUALCOSA CHE MI SFUGGE**************** }
+     */
 
     @Override
     public int size() {
@@ -77,15 +77,7 @@ public class MapAdapter implements HMap {
 
     @Override
     public void putAll(HMap t) {
-        // keys
-        HSet oldKeys = t.keySet();
-        HIterator i = oldKeys.iterator();
-        // values
-        HCollection oldValues = t.values();
-        HIterator v = oldValues.iterator();
-
-        while (i.hasNext() && v.hasNext())
-            this.put(i.next(), v.next());
+        // TODO Auto-generated method stub
     }
 
     @Override
@@ -146,28 +138,40 @@ public class MapAdapter implements HMap {
     private class IteratorAdapter implements HIterator {
         private int index;
         private boolean next;
-        MapAdapter map;
+        SetAdapter set;
 
-        IteratorAdapter(MapAdapter m) {
-            map = new MapAdapter(m);
+        IteratorAdapter() {
+            set = new SetAdapter();
+        }
+
+        IteratorAdapter(SetAdapter s) {
+            set = new SetAdapter(s);
             index = -1;
         }
 
         public boolean hasNext() {
-            return false;
+            return (index < this.set.size());
         }
 
         public Object next() {
-            return null;
+            if (index == this.set.size())
+                throw new NoSuchElementException();
+
+            return this.set.mySet.elementAt(index++);
         }
 
         public void remove() {
+            if (index < 0)
+                throw new IllegalStateException();
+
+            this.set.mySet.removeElementAt(index);
+            index--;
         }
     }
 
     private class SetAdapter implements HSet {
 
-        private Vector mySet;
+        public Vector mySet;
 
         public SetAdapter() {
             mySet = null;
@@ -191,103 +195,197 @@ public class MapAdapter implements HMap {
         public boolean contains(Object o) {
             if (o == null)
                 throw new NullPointerException();
-            
+
             return this.mySet.contains(o);
         }
 
         @Override
         public HIterator iterator() {
-            // TODO Auto-generated method stub
-            return null;
+            IteratorAdapter iter = new IteratorAdapter(this);
+            return iter;
         }
 
         @Override
         public Object[] toArray() {
             Object[] tmp = new Object[this.mySet.size()];
             this.mySet.copyInto(tmp);
+
             return tmp;
         }
 
         @Override
         public Object[] toArray(Object[] a) {
-            // TODO Auto-generated method stub
-            return null;
+            if (a == null)
+                throw new NullPointerException();
+            if (!(a instanceof SetAdapter[]))
+                throw new ArrayStoreException();
+
+            if (a.length < this.mySet.size())
+                a = new Object[this.mySet.size()];
+
+            this.mySet.copyInto(a);
+
+            return a;
         }
 
         @Override
         public boolean add(Object o) {
-            // TODO Auto-generated method stub
+            if (o == null)
+                throw new NullPointerException();
+
+            if (this.mySet.contains(o))
+                return false;
+
+            this.mySet.addElement(o);
+
             return false;
         }
 
         @Override
-        public boolean remove(Object o){
-            // TODO Auto-generated method stub
-            return false;
+        public boolean remove(Object o) {
+            if (o == null)
+                throw new NullPointerException();
+
+            return this.mySet.removeElement(o);
         }
 
         @Override
         public boolean containsAll(HCollection c) {
-            // TODO Auto-generated method stub
-            return false;
+            if (c == null)
+                throw new NullPointerException();
+
+            HIterator iter = c.iterator();
+
+            while (iter.hasNext())
+                if (!(this.mySet.contains(iter.next())))
+                    return false;
+
+            return true;
         }
 
         @Override
         public boolean addAll(HCollection c) {
-            // TODO Auto-generated method stub
-            return false;
+            if (c.contains(null))
+                throw new NullPointerException();
+            if (c == null)
+                return false;
+
+            int oldSize = this.mySet.size();
+
+            HIterator iter = c.iterator();
+
+            while (iter.hasNext())
+                this.add(iter.next());
+
+            if (this.mySet.size() == oldSize) // if it has still the same size, nothing has been deleted
+                return false;
+
+            return true;
         }
 
         @Override
         public boolean retainAll(HCollection c) {
-            // TODO Auto-generated method stub
-            return false;
+            if (c.contains(null))
+                throw new NullPointerException();
+            if (c == null)
+                return false;
+
+            int oldSize = this.mySet.size();
+            
+            HIterator iter = c.iterator();
+            Object tmp;
+            while (iter.hasNext()){
+                tmp = iter.next();
+                if(!(this.mySet.contains(tmp)))
+                    this.mySet.removeElement(tmp);
+            }
+
+            if (this.mySet.size() == oldSize) // if it has still the same size, nothing has been deleted
+                return false;
+
+            return true;
         }
 
         @Override
         public boolean removeAll(HCollection c) {
-            // TODO Auto-generated method stub
+            if (c.contains(null))
+                throw new NullPointerException();
+            if (c == null)
+                return false;
+
+            int oldSize = this.mySet.size();
+
+            HIterator iter = c.iterator();
+
+            while (iter.hasNext())
+                this.remove(iter.next());
+
+            if (this.mySet.size() == oldSize) // if it has still the same size, nothing has been deleted
+                return false;
+
             return false;
         }
 
         @Override
         public void clear() {
-            this.clear();
+            this.mySet.clear();
         }
 
     }
 
-    
-    private class EntryAdapter implements Map.Entry{
+    private class EntryAdapter implements Map.Entry {
+        private Object myKey;
+        private Object myValue;
 
         @Override
         public Object getKey() {
-            // TODO Auto-generated method stub
-            return null;
+            return myKey;
         }
 
         @Override
         public Object getValue() {
-            // TODO Auto-generated method stub
-            return null;
+            return myValue;
         }
 
         @Override
         public Object setValue(Object value) {
-            // TODO Auto-generated method stub
-            return null;
+            if (value == null)
+                throw new NullPointerException();
+
+            Object oldValue = this.myValue;
+
+            this.myValue = value;
+
+            return oldValue;
         }
 
         @Override
-        public boolean equals(Object o){
-            // TODO Auto-generated method stub
-            return false;
+        public boolean equals(Object o) {
+            if (!(o instanceof EntryAdapter))
+                return false;
+
+            EntryAdapter myO = (EntryAdapter) o;
+
+            return (myO.getKey() == this.myKey && myO.getValue() == this.myValue);
         }
 
         @Override
-        public int hashCode(){
-            // TODO Auto-generated method stub
-            return -1;
+        public int hashCode() {
+            int keyCode;
+            int valueCode;
+
+            if (this.myKey == null)
+                keyCode = 0;
+            else
+                keyCode = this.myKey.hashCode();
+
+            if (this.myValue == null)
+                valueCode = 0;
+            else
+                valueCode = this.myValue.hashCode();
+
+            int code = keyCode | valueCode;
+            return code;
         }
     }
 }
