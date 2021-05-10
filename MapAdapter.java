@@ -48,7 +48,7 @@ public class MapAdapter implements HMap {
         if (value == null)
             throw new NullPointerException();
 
-        return this.hash.containsValue(value);
+        return this.hash.contains(value);
     }
 
     @Override
@@ -77,30 +77,51 @@ public class MapAdapter implements HMap {
 
     @Override
     public void putAll(HMap t) {
-        // TODO Auto-generated method stub
+        if (t == null)
+            throw new NullPointerException();
+
+        // keys iterator
+        HSet keySet = t.keySet();
+        HIterator iter = keySet.iterator();
+
+        Object tmpKey;
+
+        while (iter.hasNext()) {
+            tmpKey = iter.next();
+            this.put(tmpKey, t.get(tmpKey));
+        }
     }
 
     @Override
     public void clear() {
         this.hash.clear();
+        this.clone = null;
     }
 
     @Override
-    public HSet keySet() {
-        // TODO Auto-generated method stub
-        return null;
+    public HSet keySet() { // BACKING
+        return (HSet) this.hash.keys();
     }
 
     @Override
-    public HCollection values() {
-        // TODO Auto-generated method stub
-        return null;
+    public HCollection values() { // BACKING
+        return (HCollection) this.hash.elements();
     }
 
     @Override
     public HSet entrySet() {
-        // TODO Auto-generated method stub
-        return null;
+        HSet thisSet = new SetAdapter();
+
+        HSet thisKey = this.keySet();
+        HIterator iter = thisKey.iterator();
+
+        while (iter.hasNext()){
+            Object tmpKey = iter.next();
+            Map.Entry tmpEntry = new EntryAdapter(tmpKey, this.get(tmpKey));
+            thisSet.add(tmpEntry);
+        }
+
+        return thisSet;
     }
 
     @Override
@@ -291,12 +312,12 @@ public class MapAdapter implements HMap {
                 return false;
 
             int oldSize = this.mySet.size();
-            
+
             HIterator iter = c.iterator();
             Object tmp;
-            while (iter.hasNext()){
+            while (iter.hasNext()) {
                 tmp = iter.next();
-                if(!(this.mySet.contains(tmp)))
+                if (!(this.mySet.contains(tmp)))
                     this.mySet.removeElement(tmp);
             }
 
@@ -336,6 +357,11 @@ public class MapAdapter implements HMap {
     private class EntryAdapter implements Map.Entry {
         private Object myKey;
         private Object myValue;
+
+        public EntryAdapter(Object key, Object value){
+            myKey = key;
+            myValue = value;
+        }
 
         @Override
         public Object getKey() {
