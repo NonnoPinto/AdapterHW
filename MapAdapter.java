@@ -1,29 +1,27 @@
 package myAdapter;
 
+import java.nio.channels.UnsupportedAddressTypeException;
 import java.util.*;
 
 public class MapAdapter implements HMap {
 
     private Hashtable hash;
-    private MapAdapter clone;
+    private HSet keySet;
+    private HSet entrySet;
 
     // default contructor
     public MapAdapter() {
         hash = new Hashtable();
-        clone = null;
+        keySet = null;
+        entrySet = null;
     }
 
     // copy construcor
     public MapAdapter(MapAdapter m) {
         hash = m.hash;
-        clone = null;
+        keySet = null;
+        entrySet = null;
     }
-
-    // helerp construcotr for backing
-    /*
-     * public MapAdapter(MapAdapter original, Hashtable entrySet){ hash = entrySet;
-     * clone = null; *************C'E' QUALCOSA CHE MI SFUGGE**************** }
-     */
 
     @Override
     public int size() {
@@ -63,6 +61,9 @@ public class MapAdapter implements HMap {
     public Object put(Object key, Object value) {
         if (key == null || value == null)
             throw new NullPointerException();
+        
+        if (keySet != null)
+            this.keySet.add(key);
 
         return this.hash.put(key, value);
     }
@@ -71,6 +72,9 @@ public class MapAdapter implements HMap {
     public Object remove(Object key) {
         if (key == null)
             throw new NullPointerException();
+        
+        if (keySet != null)
+            this.keySet.remove(key);
 
         return this.hash.remove(key);
     }
@@ -79,47 +83,88 @@ public class MapAdapter implements HMap {
     public void putAll(HMap t) {
         if (t == null)
             throw new NullPointerException();
+        
+        boolean hasKeySet = false;
+        if (this.keySet != null) hasKeySet = true;
+        
+        // keys and values iterator
+        HSet tmpKeySet = t.keySet();
+        HCollection tmpValueSet = t.values();
+        
+        HIterator iterK = tmpKeySet.iterator();
+        HIterator iterV = tmpValueSet.iterator();
 
-        // keys iterator
-        HSet keySet = t.keySet();
-        HIterator iter = keySet.iterator();
+        Object myK;
+        Object myV;
 
-        Object tmpKey;
-
-        while (iter.hasNext()) {
-            tmpKey = iter.next();
-            this.put(tmpKey, t.get(tmpKey));
+        while (iterK.hasNext() && iterV.hasNext()) {
+            myK = iterK.next();
+            myV = iterV.next();
+            
+            if (hasKeySet) this.keySet.add(myK);
+            
+            this.put(myK, myV);
         }
     }
 
     @Override
     public void clear() {
+        if (this.keySet != null)
+            this.keySet.clear();
+
         this.hash.clear();
-        this.clone = null;
     }
 
     @Override
-    public HSet keySet() { // BACKING
-        return (HSet) this.hash.keys();
+    public HSet keySet() {
+        if (this.keySet != null)
+            throw new UnsupportedOperationException("You already made a Set from this Map!");
+
+        HSet mySet = new SetAdapter(this, this.hash.keys());
+        this.keySet = mySet;
+
+        return mySet;
     }
 
+    /*
+     * The collection is backed by the map, so changes to the map are reflected in
+     * the collection, and vice-versa. If the map is modified while an iteration
+     * over the collection is in progress, the results of the iteration are
+     * undefined. The collection supports element removal, which removes the
+     * corresponding mapping from the map, via the Iterator.remove,
+     * Collection.remove, removeAll, retainAll and clear operations. It does not
+     * support the add or addAll operations.
+     */
     @Override
-    public HCollection values() { // BACKING
+    public HCollection values() {
         return (HCollection) this.hash.elements();
     }
 
+    /*
+     * The set is backed by the map, so changes to the map are reflected in the set,
+     * and vice-versa. If the map is modified while an iteration over the set is in
+     * progress, the results of the iteration are undefined. The set supports
+     * element removal, which removes the corresponding mapping from the map, via
+     * the Iterator.remove, Set.remove, removeAll, retainAll and clear operations.
+     * It does not support the add or addAll operations.
+     */
     @Override
     public HSet entrySet() {
+        if (this.entrySet != null)
+            throw new UnsupportedOperationException("You already made a Set from this Map!");
+
         HSet thisSet = new SetAdapter();
 
         HSet thisKey = this.keySet();
         HIterator iter = thisKey.iterator();
 
-        while (iter.hasNext()){
+        while (iter.hasNext()) {
             Object tmpKey = iter.next();
             Map.Entry tmpEntry = new EntryAdapter(tmpKey, this.get(tmpKey));
             thisSet.add(tmpEntry);
         }
+
+        this.entrySet = thisSet;
 
         return thisSet;
     }
@@ -159,14 +204,15 @@ public class MapAdapter implements HMap {
     private class IteratorAdapter implements HIterator {
         private int index;
         private boolean next;
-        SetAdapter set;
+        public SetAdapter set;
 
         IteratorAdapter() {
             set = new SetAdapter();
+            index = -1;
         }
 
         IteratorAdapter(SetAdapter s) {
-            set = new SetAdapter(s);
+            set = s;
             index = -1;
         }
 
@@ -185,6 +231,9 @@ public class MapAdapter implements HMap {
             if (index < 0)
                 throw new IllegalStateException();
 
+            if (this.set.map != null)
+                this.set.map.remove(this.set.mySet.elementAt(index));
+
             this.set.mySet.removeElementAt(index);
             index--;
         }
@@ -193,13 +242,17 @@ public class MapAdapter implements HMap {
     private class SetAdapter implements HSet {
 
         public Vector mySet;
+        public MapAdapter map;
 
         public SetAdapter() {
             mySet = null;
+            map = null;
         }
 
-        public SetAdapter(SetAdapter s) {
-            mySet = s.mySet;
+        public SetAdapter(MapAdapter m, Enumeration e) {
+            while (e.hasMoreElements())
+                mySet.addElement(e.nextElement());
+            map = m;
         }
 
         @Override
@@ -254,18 +307,24 @@ public class MapAdapter implements HMap {
             if (o == null)
                 throw new NullPointerException();
 
+            if (this.map != null)
+                throw new UnsupportedOperationException();
+
             if (this.mySet.contains(o))
                 return false;
 
             this.mySet.addElement(o);
 
-            return false;
+            return true;
         }
 
         @Override
         public boolean remove(Object o) {
             if (o == null)
                 throw new NullPointerException();
+
+            if (this.map != null)
+                this.map.remove(o);
 
             return this.mySet.removeElement(o);
         }
@@ -288,6 +347,10 @@ public class MapAdapter implements HMap {
         public boolean addAll(HCollection c) {
             if (c.contains(null))
                 throw new NullPointerException();
+
+            if (this.map != null)
+                throw new UnsupportedOperationException();
+
             if (c == null)
                 return false;
 
@@ -311,12 +374,21 @@ public class MapAdapter implements HMap {
             if (c == null)
                 return false;
 
+            boolean hasMap = false;
+            if (this.map != map)
+                hasMap = true;
+
             int oldSize = this.mySet.size();
 
             HIterator iter = c.iterator();
             Object tmp;
+
             while (iter.hasNext()) {
                 tmp = iter.next();
+
+                if (hasMap && this.map.containsKey(tmp))
+                    this.map.remove(tmp);
+
                 if (!(this.mySet.contains(tmp)))
                     this.mySet.removeElement(tmp);
             }
@@ -334,12 +406,24 @@ public class MapAdapter implements HMap {
             if (c == null)
                 return false;
 
+            boolean hasMap = false;
+            if (this.map != null)
+                hasMap = true;
+
             int oldSize = this.mySet.size();
 
             HIterator iter = c.iterator();
 
-            while (iter.hasNext())
-                this.remove(iter.next());
+            Object tmp;
+
+            while (iter.hasNext()) {
+                tmp = iter.next();
+
+                if (hasMap)
+                    this.map.remove(tmp);
+
+                this.remove(tmp);
+            }
 
             if (this.mySet.size() == oldSize) // if it has still the same size, nothing has been deleted
                 return false;
@@ -350,6 +434,7 @@ public class MapAdapter implements HMap {
         @Override
         public void clear() {
             this.mySet.clear();
+            this.map.clear();
         }
 
     }
@@ -358,7 +443,7 @@ public class MapAdapter implements HMap {
         private Object myKey;
         private Object myValue;
 
-        public EntryAdapter(Object key, Object value){
+        public EntryAdapter(Object key, Object value) {
             myKey = key;
             myValue = value;
         }

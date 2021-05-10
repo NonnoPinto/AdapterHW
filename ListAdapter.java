@@ -40,13 +40,10 @@ public class ListAdapter implements HList {
     }
 
     // costructor
-    /*public ListAdapter(Vector a) {
-        myVec = new Vector();
-        for (int i = 0; i < a.size(); i++)
-            myVec.addElement(a.elementAt(i));
-        sub = null;
-        clone = null;
-    }*/
+    /*
+     * public ListAdapter(Vector a) { myVec = new Vector(); for (int i = 0; i <
+     * a.size(); i++) myVec.addElement(a.elementAt(i)); sub = null; clone = null; }
+     */
 
     // subList helper constructor
     public ListAdapter(int from, int to, ListAdapter l, Vector a) {
@@ -165,7 +162,7 @@ public class ListAdapter implements HList {
             throw new NullPointerException();
         else if (c == null)
             return false;
-    
+
         int oldSize;
         // check if this ListAdapater has a sublist
         // if true, also sublist is modified
@@ -197,7 +194,7 @@ public class ListAdapter implements HList {
             throw new IndexOutOfBoundsException();
         else if (c == null)
             return false;
-        
+
         int oldSize;
         if (this.clone != null && index < this.clone.myVec.size() && index > this.clone.sub.from) {
             HIterator tmpSub = c.iterator();
@@ -455,6 +452,9 @@ public class ListAdapter implements HList {
             while (myTmp.hasNext() && tmp.hasNext()) // if a single element doesnt match, return false
                 if (myTmp.next() != tmp.next())
                     return false;
+
+            if (myTmp.hasNext() || tmp.hasNext())
+                return false;
         } else // o !(istance of) ListAdapter
             return false;
 
