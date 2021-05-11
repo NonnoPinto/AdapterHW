@@ -39,12 +39,6 @@ public class ListAdapter implements HList {
         clone = null;
     }
 
-    // costructor
-    /*
-     * public ListAdapter(Vector a) { myVec = new Vector(); for (int i = 0; i <
-     * a.size(); i++) myVec.addElement(a.elementAt(i)); sub = null; clone = null; }
-     */
-
     // subList helper constructor
     public ListAdapter(int from, int to, ListAdapter l, Vector a) {
         myVec = a;

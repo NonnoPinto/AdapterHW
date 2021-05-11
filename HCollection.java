@@ -1,5 +1,7 @@
 package myAdapter;
 
+import java.util.*;
+
 /**
  * The root interface in the collection hierarchy. A collection represents a
  * group of objects, known as its elements. Some collections allow duplicate
