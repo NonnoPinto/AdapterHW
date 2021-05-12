@@ -475,8 +475,7 @@ public class ListAdapter implements HList {
                 throw new NoSuchElementException();
 
             next = true;
-
-            return list.myVec.elementAt(index++);
+            return list.myVec.elementAt(++index);
         }
 
         public void remove() {
@@ -501,7 +500,8 @@ public class ListAdapter implements HList {
 
         public void add(Object o) {
             check = false;
-            this.iter.list.myVec.insertElementAt(o, this.iter.index++);
+            int i = this.iter.index--;
+            this.iter.list.myVec.insertElementAt(o, i);
         }
 
         public boolean hasNext() {
@@ -532,8 +532,8 @@ public class ListAdapter implements HList {
                 throw new NoSuchElementException();
 
             check = true;
-
-            return (this.iter.list.myVec.elementAt(this.iter.index--));
+            int i = this.iter.index--;
+            return (this.iter.list.myVec.elementAt(i));
         }
 
         public int previousIndex() {

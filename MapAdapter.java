@@ -2,6 +2,8 @@ package myAdapter;
 
 import java.util.*;
 
+import javax.lang.model.util.ElementScanner6;
+
 //There arent any ClassCastExcpetion (and similar exception) cuz we r supposing everything is Object
 //thorugh code, ive often used "this". I know it does not help to make code easy to read, but i choose this way to help understanding the code, since inve used very similar variable names
 
@@ -24,9 +26,9 @@ public class MapAdapter implements HMap {
     // copy construcor
     public MapAdapter(MapAdapter m) {
         hash = m.hash;
-        keySet = null;
-        entrySet = null;
-        valueCol = null;
+        keySet = m.keySet;
+        entrySet = m.entrySet;
+        valueCol = m.valueCol;
     }
 
     @Override
@@ -126,13 +128,13 @@ public class MapAdapter implements HMap {
         while (iterK.hasNext() && iterV.hasNext()) {
             myK = iterK.next();
             myV = iterV.next();
-            // backing
+            // backing  NON FUNZIONA (add non partirà mai)
             if (hasKeySet)
                 this.keySet.add(myK);
-            // backing
+            // backing  NON FUNZIONA (add non partirà mai)
             if (hasEntrySet)
                 this.entrySet.add(new EntryAdapter(myK, myV));
-            // backing
+            // backing  NON FUNZIONA (add non partirà mai)
             if (hasValueCol)
                 this.valueCol.add(myV);
 
@@ -143,14 +145,20 @@ public class MapAdapter implements HMap {
     @Override
     public void clear() {
         // backing
-        if (this.keySet != null)
+        if (this.keySet != null){
             this.keySet.clear();
+            this.keySet = null;
+        }
         // backing
-        if (this.entrySet != null)
+        if (this.entrySet != null){
             this.entrySet.clear();
+            this.entrySet = null;
+        }
         // backing
-        if (this.valueCol != null)
+        if (this.valueCol != null){
             this.valueCol.clear();
+            this.valueCol = null;
+        }
 
         this.hash.clear();
     }
@@ -194,20 +202,32 @@ public class MapAdapter implements HMap {
         if (this.entrySet != null)
             throw new UnsupportedOperationException("You already made a Set from this Map!");
 
-        HSet thisSet = new SetAdapter();
+        
+        HSet thisKey;
+        boolean tmp = false;
+        if (this.keySet == null){
+            thisKey = this.keySet();
+            tmp = true;
+        }
+        else
+            thisKey = this.keySet;
 
-        HSet thisKey = this.keySet();
+        Vector vec = new Vector();
+
         HIterator iter = thisKey.iterator();
         // filling the set with entries
         while (iter.hasNext()) {
             Object tmpKey = iter.next();
-            thisSet.add(new EntryAdapter(tmpKey, this.get(tmpKey)));
+            vec.addElement(new EntryAdapter(tmpKey, this.hash.get(tmpKey)));
         }
         // entryset method saves the entryset also inside tha MapAdapter Object, for
         // backing
-        this.entrySet = thisSet;
+        this.entrySet = new SetAdapter(this, vec, true);
 
-        return thisSet;
+        if(tmp)
+            this.keySet = null;
+
+        return this.entrySet;
     }
 
     @Override
@@ -217,10 +237,24 @@ public class MapAdapter implements HMap {
         // o istanceOF MapAdapter
         else {
             // my entries
-            HIterator myIter = this.entrySet().iterator();
+            HIterator myIter;
+
+            if (this.entrySet == null){
+                myIter = this.entrySet().iterator();
+                this.entrySet = null;
+            }
+            else
+                myIter = this.entrySet.iterator();
 
             // argoument entries
-            HIterator oIter = ((MapAdapter) o).entrySet().iterator();
+            HIterator oIter;
+
+            if (this.entrySet == null){
+                oIter = ((MapAdapter) o).entrySet().iterator();
+                ((MapAdapter) o).entrySet = null;
+            }
+            else
+                oIter = ((MapAdapter) o).entrySet.iterator();
 
             // comparing Map.Entry
             while (myIter.hasNext() && oIter.hasNext())
@@ -237,7 +271,13 @@ public class MapAdapter implements HMap {
     public int hashCode() {
         int myHashCode = 0;
 
-        HIterator myIter = this.entrySet().iterator();
+        HIterator myIter;
+        if (this.entrySet == null){
+            myIter = this.entrySet().iterator();
+            this.entrySet = null;
+        }
+        else
+            myIter = this.entrySet.iterator();
 
         while (myIter.hasNext())
             myHashCode += myIter.next().hashCode();
@@ -255,19 +295,25 @@ public class MapAdapter implements HMap {
         }
 
         IteratorAdapter(SetAdapter s) {
-            set = s;
+            set = new SetAdapter();
+            set.mySet = s.mySet;
+            set.isKey = s.isKey;
+            set.isEntry = s.isEntry;
+            set.map = s.map;
             index = -1;
         }
 
         public boolean hasNext() {
-            return (index < this.set.size());
+            return (index < this.set.size() - 1);
         }
 
         public Object next() {
-            if (index == this.set.size())
+            if (index >= (this.set.mySet.size() - 1))
                 throw new NoSuchElementException();
 
-            return this.set.mySet.elementAt(index++);
+            index++;
+
+            return this.set.mySet.elementAt(index);
         }
 
         public void remove() {
@@ -280,7 +326,7 @@ public class MapAdapter implements HMap {
 
             // backing
             // entry iterator
-            if (this.set.map != null && this.set.mySet.elementAt(index) instanceof EntryAdapter) {
+            if (this.set.map != null && this.set.isEntry) {
                 Object key = ((EntryAdapter) this.set.mySet.elementAt(index)).getKey();
                 this.set.map.hash.remove(key);
             }
@@ -305,7 +351,7 @@ public class MapAdapter implements HMap {
                         Object tmpKey = tmpEntry.getKey();
                         Object tmpValue = tmpEntry.getValue();
                         // if matching, save the index
-                        if (tmpValue == this.set.mySet.elementAt(index))
+                        if (tmpValue.equals(this.set.mySet.elementAt(index)))
                             myIndex = tmpKey;
                     }
 
@@ -327,7 +373,7 @@ public class MapAdapter implements HMap {
                         Object tmpKey = tmpEntry.getKey();
                         Object tmpValue = tmpEntry.getValue();
                         // if matching, save the index
-                        if (tmpValue == this.set.mySet.elementAt(index))
+                        if (tmpValue.equals(this.set.mySet.elementAt(index)))
                             myIndex = tmpKey;
                     }
 
@@ -346,18 +392,28 @@ public class MapAdapter implements HMap {
         public MapAdapter map;
         // isKey == true if its a KeySet, false if its a ValueSet
         boolean isKey;
+        boolean isEntry;
 
         public SetAdapter() {
-            mySet = null;
+            mySet = new Vector();
             map = null;
         }
 
         public SetAdapter(MapAdapter m, Enumeration e, boolean b) {
+            mySet = new Vector();
             // fill vector with enumearion
             while (e.hasMoreElements())
                 mySet.addElement(e.nextElement());
             map = m;
             isKey = b;
+            isEntry = false;
+        }
+
+        public SetAdapter(MapAdapter m, Vector v, boolean b) {
+            mySet = v;
+            map = m;
+            isKey = false;
+            isEntry = b;
         }
 
         @Override
@@ -449,7 +505,7 @@ public class MapAdapter implements HMap {
                         Object tmpKey = tmpEntry.getKey();
                         Object tmpValue = tmpEntry.getValue();
                         // if matching, save the index
-                        if (tmpValue == o)
+                        if (tmpValue.equals(o))
                             myIndex = tmpKey;
                     }
 
@@ -471,7 +527,7 @@ public class MapAdapter implements HMap {
                         Object tmpKey = tmpEntry.getKey();
                         Object tmpValue = tmpEntry.getValue();
                         // if matching, save the index
-                        if (tmpValue == o)
+                        if (tmpValue.equals(o))
                             myIndex = tmpKey;
                     }
 
@@ -544,27 +600,25 @@ public class MapAdapter implements HMap {
                         if (tmp instanceof EntryAdapter) {
                             Object tmpKey = ((EntryAdapter) tmp).getKey();
                             this.map.hash.remove(tmpKey);
-                        }
-                        else if (this.isKey)
+                        } else if (this.isKey)
                             this.map.hash.remove(tmp);
-                        else{
-                            if (this.map.entrySet == null){
+                        else {
+                            if (this.map.entrySet == null) {
                                 Object my_key = null;
-                                //cerating an entryset
+                                // cerating an entryset
                                 HSet tmpEntrySet = this.map.entrySet();
                                 HIterator tmpEntryIter = tmpEntrySet.iterator();
                                 while (tmpEntryIter.hasNext() || my_key == null)
-                                    if (tmp == ((EntryAdapter)tmpEntryIter.next()).getValue())
+                                    if (tmp.equals(((EntryAdapter) tmpEntryIter.next()).getValue()))
                                         my_key = tmp;
                                 this.map.remove(my_key);
-                                //removing entryset
+                                // removing entryset
                                 this.map.entrySet = null;
-                            }
-                            else{
+                            } else {
                                 Object my_key = null;
                                 HIterator tmpEntryIter = this.map.entrySet.iterator();
                                 while (tmpEntryIter.hasNext() || my_key == null)
-                                    if (tmp == ((EntryAdapter)tmpEntryIter.next()).getValue())
+                                    if (tmp.equals(((EntryAdapter) tmpEntryIter.next()).getValue()))
                                         my_key = tmp;
                                 this.map.remove(my_key);
                             }
@@ -603,7 +657,7 @@ public class MapAdapter implements HMap {
 
                 if (this.mySet.contains(tmp)) {
                     if (hasMap) {
-                        //using the setadapter.remove
+                        // using the setadapter.remove
                         this.remove(tmp);
                     }
 
@@ -629,13 +683,13 @@ public class MapAdapter implements HMap {
         private Object myKey;
         private Object myValue;
 
-        //default constructor
+        // default constructor
         public EntryAdapter() {
             myKey = null;
             myValue = null;
         }
 
-        //constructor
+        // constructor
         public EntryAdapter(Object key, Object value) {
             myKey = key;
             myValue = value;
@@ -670,7 +724,7 @@ public class MapAdapter implements HMap {
 
             EntryAdapter myO = (EntryAdapter) o;
 
-            return (myO.getKey() == this.myKey && myO.getValue() == this.myValue);
+            return (myO.getKey().equals(this.myKey) && myO.getValue().equals(this.myValue));
         }
 
         @Override
