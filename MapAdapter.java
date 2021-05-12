@@ -2,8 +2,6 @@ package myAdapter;
 
 import java.util.*;
 
-import javax.lang.model.util.ElementScanner6;
-
 //There arent any ClassCastExcpetion (and similar exception) cuz we r supposing everything is Object
 //thorugh code, ive often used "this". I know it does not help to make code easy to read, but i choose this way to help understanding the code, since inve used very similar variable names
 
@@ -71,14 +69,14 @@ public class MapAdapter implements HMap {
             throw new NullPointerException();
         // backing
         if (keySet != null)
-            this.keySet.add(key);
+            this.keySet.mySet.addElement(key);
         // backing
         if (valueCol != null)
-            this.valueCol.add(value);
+            this.valueCol.mySet.addElement(value);
         // backing
         if (entrySet != null) {
             EntryAdapter tmp = new EntryAdapter(key, value);
-            this.entrySet.add(tmp);
+            this.entrySet.mySet.addElement(tmp);
         }
 
         return this.hash.put(key, value);
