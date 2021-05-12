@@ -137,9 +137,10 @@ public class ListAdapter implements HList {
 
     @Override
     public boolean containsAll(HCollection c) {
-        if (c.contains(null) || c == null) // here and in similar piece of code the check "c.contains(null)" isnt really
-                                           // usefull: add doesnt accept "null" as argoument
-            throw new NullPointerException(); // but this.myVec way prevent this.myVec integrity
+        if (c == null)
+            throw new NullPointerException();
+        if (c.isEmpty())
+            return false;
 
         HIterator tmp = c.iterator();
 
@@ -152,9 +153,9 @@ public class ListAdapter implements HList {
 
     @Override
     public boolean addAll(HCollection c) {
-        if (c.contains(null))
+        if (c == null)
             throw new NullPointerException();
-        else if (c == null)
+        else if (c.isEmpty())
             return false;
 
         int oldSize;
@@ -182,11 +183,11 @@ public class ListAdapter implements HList {
 
     @Override
     public boolean addAll(int index, HCollection c) {
-        if (c.contains(null))
+        if (c == null)
             throw new NullPointerException();
         else if (index < 0 || index > this.myVec.size())
             throw new IndexOutOfBoundsException();
-        else if (c == null)
+        else if (c.isEmpty())
             return false;
 
         int oldSize;
@@ -212,8 +213,10 @@ public class ListAdapter implements HList {
 
     @Override
     public boolean removeAll(HCollection c) {
-        if (c.contains(null) || c == null)
+        if (c == null)
             throw new NullPointerException();
+        if (c.isEmpty())
+            return false;
 
         int oldSize;
         // remove all from sublist
@@ -241,8 +244,10 @@ public class ListAdapter implements HList {
 
     @Override
     public boolean retainAll(HCollection c) {
-        if (c.contains(null) || c == null)
+        if (c == null)
             throw new NullPointerException();
+        if (c.isEmpty())
+            return false;
 
         int oldSize;
 
@@ -275,6 +280,34 @@ public class ListAdapter implements HList {
             this.sub.from = 0;
         }
         this.myVec.removeAllElements();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof ListAdapter) { // o is istnace of ListAdpter
+            HIterator myTmp = this.iterator();
+            HIterator tmp = ((ListAdapter) o).iterator();
+            while (myTmp.hasNext() && tmp.hasNext()) // if a single element doesnt match, return false
+                if (!(myTmp.next().equals(tmp.next())))
+                    return false;
+
+            if (myTmp.hasNext() || tmp.hasNext())
+                return false;
+        } else // o !(istance of) ListAdapter
+            return false;
+
+        return true; // o is istance of ListAdapter AND all elements match at the same position
+    }
+
+    @Override
+    public int hashCode() {
+        int hashCode = 1;
+        HIterator i = this.iterator();
+        while (i.hasNext()) {
+            Object obj = i.next();
+            hashCode = 31 * hashCode + (obj == null ? 0 : obj.hashCode());
+        }
+        return hashCode;
     }
 
     @Override
@@ -403,7 +436,7 @@ public class ListAdapter implements HList {
      * checking "sub" and "clone" and with them we can easly find sublist from
      * original and viceversa
      * 
-     * A sublist from another sublist cant be made
+     * One list does not support two different sublist
      */
 
     @Override
@@ -412,8 +445,8 @@ public class ListAdapter implements HList {
             throw new IndexOutOfBoundsException();
 
         // check if its already a sublist
-        if (this.sub != null)
-            throw new ClassCastException("Cant make a sublist from another sublist");
+        if (this.clone != null)
+            throw new UnsupportedOperationException("Cant make a sublist from a list who already has one");
 
         Vector subVec = new Vector(); // subvecotr
 
@@ -425,34 +458,6 @@ public class ListAdapter implements HList {
         this.clone = sub;
 
         return sub;
-    }
-
-    @Override
-    public int hashCode() {
-        int hashCode = 1;
-        HIterator i = this.iterator();
-        while (i.hasNext()) {
-            Object obj = i.next();
-            hashCode = 31 * hashCode + (obj == null ? 0 : obj.hashCode());
-        }
-        return hashCode;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o instanceof ListAdapter) { // o is istnace of ListAdpter
-            HIterator myTmp = this.iterator();
-            HIterator tmp = ((ListAdapter) o).iterator();
-            while (myTmp.hasNext() && tmp.hasNext()) // if a single element doesnt match, return false
-                if (myTmp.next() != tmp.next())
-                    return false;
-
-            if (myTmp.hasNext() || tmp.hasNext())
-                return false;
-        } else // o !(istance of) ListAdapter
-            return false;
-
-        return true; // o is istance of ListAdapter AND all elements match at the same position
     }
 
     private class IteratorAdapter implements HIterator {
@@ -467,11 +472,11 @@ public class ListAdapter implements HList {
         }
 
         public boolean hasNext() {
-            return (index < list.myVec.size());
+            return (index < list.myVec.size() - 1);
         }
 
         public Object next() {
-            if (index == list.myVec.size())
+            if (index == list.myVec.size() - 1)
                 throw new NoSuchElementException();
 
             next = true;
@@ -500,12 +505,16 @@ public class ListAdapter implements HList {
 
         public void add(Object o) {
             check = false;
-            int i = this.iter.index--;
+            int i;
+            if (this.iter.index == -1)
+                i = 0;
+            else
+                i = this.iter.index;
             this.iter.list.myVec.insertElementAt(o, i);
         }
 
         public boolean hasNext() {
-            return (this.iter.index < this.iter.list.myVec.size());
+            return (this.iter.index < this.iter.list.myVec.size() - 1);
         }
 
         public boolean hasPrevious() {
@@ -519,7 +528,7 @@ public class ListAdapter implements HList {
 
         public int nextIndex() {
             int myIndex;
-            if (this.iter.index == this.iter.list.myVec.size())
+            if (this.iter.index == this.iter.list.myVec.size() - 1)
                 myIndex = this.iter.index;
             else
                 myIndex = this.iter.index + 1;
@@ -528,7 +537,7 @@ public class ListAdapter implements HList {
         }
 
         public Object previous() {
-            if (this.iter.index == 0)
+            if (this.iter.index <= 0)
                 throw new NoSuchElementException();
 
             check = true;
