@@ -1,21 +1,19 @@
 package myTest;
 
 import myAdapter.*;
+import java.util.*;
 import static org.junit.Assert.*;
-
-import java.util.NoSuchElementException;
-
 import org.junit.Test;
 import org.junit.Before;
 
 public class MapAdapterTest {
 
     MapAdapter mapTest;
-    //Set
+    // Set
     HSet entrySet;
     HSet keySet;
     HCollection valueSet;
-    //Iterators
+    // Iterators
     HIterator entryIter;
     HIterator valueIter;
     HIterator keyIter;
@@ -85,7 +83,24 @@ public class MapAdapterTest {
         assertEquals(null, mapTest.put("chiave", "valore"));
         assertEquals("valore", mapTest.put("chiave", "secondo valore"));
         assertEquals("secondo valore", mapTest.get("chiave"));
-        //MANCA IL BACKING
+        
+        init();
+        fill();
+        createIterator();
+        Object obj = entryIter.next();
+        //prebacking
+        assertFalse(valueSet.contains("valore diverso"));
+        assertFalse(keySet.contains(20));
+        //entry backing
+        assertTrue(entrySet.contains(obj));
+        //put()
+        assertEquals("valore n. 2", mapTest.put(2,"valore diverso"));
+        assertEquals(null, mapTest.put(20,"fuori dal fill()"));
+        assertTrue(mapTest.containsValue("valore diverso"));
+        //backing
+        assertTrue(valueSet.contains("valore diverso"));
+        assertTrue(keySet.contains(20));
+
     }
 
     @Test
@@ -96,7 +111,22 @@ public class MapAdapterTest {
         assertEquals(null, mapTest.remove("chiave"));
         mapTest.put("chiave", "valore");
         assertEquals("valore", mapTest.remove("chiave"));
-        //MANCA IL BACKING
+        
+        init();
+        fill();
+        createIterator();
+        //prebacking
+        assertEquals(null, mapTest.remove(20));
+        assertTrue(keySet.contains(19));
+        assertTrue(valueSet.contains("valore n. 19"));
+        Object obj = entryIter.next();
+        assertTrue(entrySet.contains(obj));
+        //remove
+        assertEquals("valore n. 19", mapTest.remove(19));
+        //backing
+        assertFalse(keySet.contains(19));
+        assertFalse(valueSet.contains("valore n. 19"));
+        assertFalse(entrySet.contains(obj));
     }
 
     @Test
@@ -114,17 +144,28 @@ public class MapAdapterTest {
             String tmp = "valore n. " + i;
             assertEquals(tmp, myMap.get(i));
         }
-        //MANCA IL BACKING
+        // MANCA IL BACKING
     }
 
     @Test
     public void clearTest() {
         fill();
 
+        createIterator();
+
+        assertFalse(mapTest.isEmpty());
+        // backing
+        assertFalse(keySet.isEmpty());
+        assertFalse(valueSet.isEmpty());
+        assertFalse(entrySet.isEmpty());
+
         mapTest.clear();
 
         assertTrue(mapTest.isEmpty());
-        //MANCA IL BACKING
+        // backing
+        assertTrue(keySet.isEmpty());
+        assertTrue(valueSet.isEmpty());
+        assertTrue(entrySet.isEmpty());
     }
 
     @Test
@@ -139,7 +180,7 @@ public class MapAdapterTest {
 
         HSet testSet = mapTest.keySet();
         HIterator testIter = testSet.iterator();
-        
+
         while (testIter.hasNext())
             assertTrue(mapTest.containsKey(testIter.next()));
     }
@@ -155,7 +196,7 @@ public class MapAdapterTest {
 
         HCollection testSet = mapTest.values();
         HIterator testIter = testSet.iterator();
-        
+
         while (testIter.hasNext())
             assertTrue(mapTest.containsValue(testIter.next()));
     }
@@ -166,7 +207,7 @@ public class MapAdapterTest {
         assertThrows(UnsupportedOperationException.class, () -> {
             mapTest.entrySet();
         });
-        //COME FACCIO A VERIFICARE UN SET... DI CUI NON HO I METODI??
+        // COME FACCIO A VERIFICARE UN SET... DI CUI NON HO I METODI??
     }
 
     @Test
@@ -292,7 +333,10 @@ public class MapAdapterTest {
         for (int i = 0; i < 20; i++)
             keyIter.remove();
 
+        assertTrue(keySet.isEmpty());
         assertTrue(mapTest.isEmpty());
+        assertTrue(entrySet.isEmpty());
+        assertTrue(valueSet.isEmpty());
 
         // value iterator remove and backing test
         init();
@@ -306,7 +350,10 @@ public class MapAdapterTest {
         for (int i = 0; i < 20; i++)
             valueIter.remove();
 
+        assertTrue(valueSet.isEmpty());
         assertTrue(mapTest.isEmpty());
+        assertTrue(entrySet.isEmpty());
+        assertTrue(keySet.isEmpty());
 
         // entry iterator remove and backing test
         init();
@@ -320,8 +367,257 @@ public class MapAdapterTest {
         for (int i = 0; i < 20; i++)
             entryIter.remove();
 
+        assertTrue(entrySet.isEmpty());
         assertTrue(mapTest.isEmpty());
-
+        assertTrue(valueSet.isEmpty());
+        assertTrue(keySet.isEmpty());
     }
 
+    @Test
+    public void setSizeTest() {
+        fill();
+        createIterator();
+        assertEquals(entrySet.size(), 20);
+        assertEquals(keySet.size(), 20);
+        assertEquals(valueSet.size(), 20);
+    }
+
+    @Test
+    public void setIsEmptyTest() {
+        createIterator();
+        assertEquals(entrySet.size(), 0);
+        assertEquals(keySet.size(), 0);
+        assertEquals(valueSet.size(), 0);
+    }
+
+    @Test
+    public void setContainsTest() {
+        fill();
+        createIterator();
+        assertThrows(NullPointerException.class, () -> {
+            entrySet.contains(null);
+        });
+        assertThrows(NullPointerException.class, () -> {
+            keySet.contains(null);
+        });
+        assertThrows(NullPointerException.class, () -> {
+            valueSet.contains(null);
+        });
+
+        assertTrue(keySet.contains(1));
+        assertTrue(valueSet.contains("valore n. " + 19));
+        assertFalse(keySet.contains(20));
+        assertFalse(valueSet.contains("valore n. " + 30));
+    }
+
+    @Test
+    public void firstSetToArrayTest() {
+        fill();
+        createIterator();
+
+        Object[] myVArr = new Object[20];
+        Object[] myKArr = new Object[20];
+
+        for (int i = 0; i < 20; i++) {
+            String tmp = "valore n. " + i;
+            myVArr[19 - i] = "valore n. " + i;
+            myKArr[19 - i] = i;
+        }
+
+        assertThrows(NullPointerException.class, () -> {
+            valueSet.toArray(null);
+        });
+        assertThrows(NullPointerException.class, () -> {
+            keySet.toArray(null);
+        });
+        assertThrows(NullPointerException.class, () -> {
+            entrySet.toArray(null);
+        });
+
+        Object[] ValArr = valueSet.toArray();
+        Object[] EntryArr = entrySet.toArray();
+        Object[] KeyArr = keySet.toArray();
+
+        assertEquals(ValArr, myVArr);
+        assertEquals(KeyArr, myKArr);
+    }
+
+    @Test
+    public void setRemoveTest() {
+        fill();
+        createIterator();
+
+        assertThrows(NullPointerException.class, () -> {
+            entrySet.remove(null);
+        });
+
+        assertThrows(NullPointerException.class, () -> {
+            valueSet.remove(null);
+        });
+
+        assertThrows(NullPointerException.class, () -> {
+            keySet.remove(null);
+        });
+
+        // key set remove and backing test
+        for (int i = 0; i < 20; i++)
+            assertTrue(keySet.remove(i));
+
+        assertTrue(keySet.isEmpty());
+        assertTrue(mapTest.isEmpty());
+        assertTrue(entrySet.isEmpty());
+        assertTrue(valueSet.isEmpty());
+
+        // value set remove and backing test
+        init();
+        fill();
+        createIterator();
+
+        for (int i = 0; i < 20; i++)
+            assertTrue(valueSet.remove("valore n. " + i));
+
+        assertTrue(valueSet.isEmpty());
+        assertTrue(mapTest.isEmpty());
+        assertTrue(entrySet.isEmpty());
+        assertTrue(keySet.isEmpty());
+    }
+
+    @Test
+    public void setContainsAllTest() {
+        createIterator();
+        assertThrows(NullPointerException.class, () -> {
+            keySet.containsAll(null);
+            entrySet.containsAll(null);
+            valueSet.containsAll(null);
+        });
+        //COME CAZZIO FACCIO
+    }
+
+    @Test
+    public void setAddAll() {
+        createIterator();
+        assertThrows(UnsupportedOperationException.class, () -> {
+            keySet.add("prova");
+        });
+        assertThrows(UnsupportedOperationException.class, () -> {
+            valueSet.add("prova");
+        });
+        // cant make any other test cuz with only MapAdapter calss public, we can make
+        // SetAdapters only through MapAdapter.TypeSet(), but since this, add() and
+        // addAll() are no more allowed (UnsupportedOperationEcxception)
+    }
+
+    @Test
+    public void setRetainAllTest() {
+        createIterator();
+        assertThrows(NullPointerException.class, () -> {
+            entrySet.retainAll(null);
+        });
+        assertThrows(NullPointerException.class, () -> {
+            keySet.retainAll(null);
+        });
+        assertThrows(NullPointerException.class, () -> {
+            valueSet.retainAll(null);
+        });
+        //COME LO FACCIO?
+    }
+
+    @Test
+    public void setRemoveAllTest() {
+        createIterator();
+        assertThrows(NullPointerException.class, () -> {
+            entrySet.retainAll(null);
+        });
+        assertThrows(NullPointerException.class, () -> {
+            keySet.retainAll(null);
+        });
+        assertThrows(NullPointerException.class, () -> {
+            valueSet.retainAll(null);
+        });
+        //COME STRACAZZO LO FACCIO?
+    }
+
+    @Test
+    public void setClearTest(){
+        fill();
+        createIterator();
+
+        assertFalse(mapTest.isEmpty());
+        // backing
+        assertFalse(keySet.isEmpty());
+        assertFalse(valueSet.isEmpty());
+        assertFalse(entrySet.isEmpty());
+
+        keySet.clear();
+
+        assertTrue(mapTest.isEmpty());
+        // backing
+        assertTrue(keySet.isEmpty());
+        assertTrue(valueSet.isEmpty());
+        assertTrue(entrySet.isEmpty());
+
+        init();
+        fill();
+        createIterator();
+
+        valueSet.clear();
+
+        assertTrue(mapTest.isEmpty());
+        // backing
+        assertTrue(keySet.isEmpty());
+        assertTrue(valueSet.isEmpty());
+        assertTrue(entrySet.isEmpty());
+
+        entrySet.clear();
+
+        assertTrue(mapTest.isEmpty());
+        // backing
+        assertTrue(keySet.isEmpty());
+        assertTrue(valueSet.isEmpty());
+        assertTrue(entrySet.isEmpty());
+    }
+
+    //EntryAdapter test
+
+    @Test
+    public void entryGetKeyTest(){
+        //COME CAZZO FACCIO
+    }
+
+    @Test
+    public void entryGetValueTest(){
+        //COME CAZZO FACCIO
+    }
+
+    @Test
+    public void entrySetValueTest(){
+        //COME CAZZO FACCIO
+    }
+
+    @Test
+    public void entryEqualsTest(){
+        fill();
+        createIterator();
+
+        MapAdapter myMap = new MapAdapter();
+        
+        //fil
+        for (int i = 0; i < 20; i++) {
+            String tmp = "valore n. " + i;
+            myMap.put(i, tmp);
+        }
+
+        //set
+        HSet myEntrySet = myMap.entrySet();
+        HIterator myEntryIterator = myEntrySet.iterator();
+
+        while(myEntryIterator.hasNext())
+            assertTrue(myEntryIterator.next().equals(entryIter.next()));
+    }
+
+    @Test
+    public void entryHashcodeTest(){
+        createIterator();
+        assertEquals(mapTest.hashCode(), 0);
+    }
 }
