@@ -4,6 +4,7 @@ import myAdapter.*;
 import java.util.*;
 import static org.junit.Assert.*;
 import org.junit.Test;
+
 import org.junit.Before;
 
 public class MapAdapterTest {
@@ -83,21 +84,21 @@ public class MapAdapterTest {
         assertEquals(null, mapTest.put("chiave", "valore"));
         assertEquals("valore", mapTest.put("chiave", "secondo valore"));
         assertEquals("secondo valore", mapTest.get("chiave"));
-        
+
         init();
         fill();
         createIterator();
         Object obj = entryIter.next();
-        //prebacking
+        // prebacking
         assertFalse(valueSet.contains("valore diverso"));
         assertFalse(keySet.contains(20));
-        //entry backing
+        // entry backing
         assertTrue(entrySet.contains(obj));
-        //put()
-        assertEquals("valore n. 2", mapTest.put(2,"valore diverso"));
-        assertEquals(null, mapTest.put(20,"fuori dal fill()"));
+        // put()
+        assertEquals("valore n. 2", mapTest.put(2, "valore diverso"));
+        assertEquals(null, mapTest.put(20, "fuori dal fill()"));
         assertTrue(mapTest.containsValue("valore diverso"));
-        //backing
+        // backing
         assertTrue(valueSet.contains("valore diverso"));
         assertTrue(keySet.contains(20));
 
@@ -111,19 +112,19 @@ public class MapAdapterTest {
         assertEquals(null, mapTest.remove("chiave"));
         mapTest.put("chiave", "valore");
         assertEquals("valore", mapTest.remove("chiave"));
-        
+
         init();
         fill();
         createIterator();
-        //prebacking
+        // prebacking
         assertEquals(null, mapTest.remove(20));
         assertTrue(keySet.contains(19));
         assertTrue(valueSet.contains("valore n. 19"));
         Object obj = entryIter.next();
         assertTrue(entrySet.contains(obj));
-        //remove
+        // remove
         assertEquals("valore n. 19", mapTest.remove(19));
-        //backing
+        // backing
         assertFalse(keySet.contains(19));
         assertFalse(valueSet.contains("valore n. 19"));
         assertFalse(entrySet.contains(obj));
@@ -411,7 +412,12 @@ public class MapAdapterTest {
     }
 
     @Test
-    public void firstSetToArrayTest() {
+    public void setIteratorTest(){
+        // TODO
+    }
+
+    @Test
+    public void setToArrayTest() {
         fill();
         createIterator();
 
@@ -490,7 +496,7 @@ public class MapAdapterTest {
             entrySet.containsAll(null);
             valueSet.containsAll(null);
         });
-        //COME CAZZIO FACCIO
+        // COME CAZZIO FACCIO
     }
 
     @Test
@@ -519,7 +525,7 @@ public class MapAdapterTest {
         assertThrows(NullPointerException.class, () -> {
             valueSet.retainAll(null);
         });
-        //COME LO FACCIO?
+        // COME LO FACCIO?
     }
 
     @Test
@@ -534,11 +540,11 @@ public class MapAdapterTest {
         assertThrows(NullPointerException.class, () -> {
             valueSet.retainAll(null);
         });
-        //COME STRACAZZO LO FACCIO?
+        // COME STRACAZZO LO FACCIO?
     }
 
     @Test
-    public void setClearTest(){
+    public void setClearTest() {
         fill();
         createIterator();
 
@@ -577,46 +583,46 @@ public class MapAdapterTest {
         assertTrue(entrySet.isEmpty());
     }
 
-    //EntryAdapter test
+    // EntryAdapter test
 
     @Test
-    public void entryGetKeyTest(){
-        //COME CAZZO FACCIO
+    public void entryGetKeyTest() {
+        // COME CAZZO FACCIO
     }
 
     @Test
-    public void entryGetValueTest(){
-        //COME CAZZO FACCIO
+    public void entryGetValueTest() {
+        // COME CAZZO FACCIO
     }
 
     @Test
-    public void entrySetValueTest(){
-        //COME CAZZO FACCIO
+    public void entrySetValueTest() {
+        // COME CAZZO FACCIO
     }
 
     @Test
-    public void entryEqualsTest(){
+    public void entryEqualsTest() {
         fill();
         createIterator();
 
         MapAdapter myMap = new MapAdapter();
-        
-        //fil
+
+        // fil
         for (int i = 0; i < 20; i++) {
             String tmp = "valore n. " + i;
             myMap.put(i, tmp);
         }
 
-        //set
+        // set
         HSet myEntrySet = myMap.entrySet();
         HIterator myEntryIterator = myEntrySet.iterator();
 
-        while(myEntryIterator.hasNext())
+        while (myEntryIterator.hasNext())
             assertTrue(myEntryIterator.next().equals(entryIter.next()));
     }
 
     @Test
-    public void entryHashcodeTest(){
+    public void entryHashcodeTest() {
         createIterator();
         assertEquals(mapTest.hashCode(), 0);
     }
