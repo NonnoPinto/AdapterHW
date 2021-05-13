@@ -62,7 +62,7 @@ public class ListAdapterTest {
     }
 
     /**
-     * <b>Method<b> contains()
+     * <b>Method</b> contains() <br>
      * 
      * <b>Summary</b> : call contains with an object as parameter and make sure that
      * the method return true, false if the element is not on the list. <br>

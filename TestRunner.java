@@ -42,6 +42,7 @@ public class TestRunner {
         int total = testResultsL.getRunCount() + testResultsM.getRunCount();
         int fail = testResultsL.getFailures().size() + testResultsM.getFailures().size();
         System.out.println("\n" + total + " test has been made and " + fail + " are failed.");
+        //JUnitCore.main("myTest.MapAdapterTest", "myTest.ListAdapterTest");
     }
   
 }

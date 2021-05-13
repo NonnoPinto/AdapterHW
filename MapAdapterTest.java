@@ -229,6 +229,13 @@ public class MapAdapterTest {
         assertTrue(valueSet.contains("valore diverso"));
         assertTrue(keySet.contains(20));
 
+        mapTest.put(2, "sono diverso");
+        mapTest.put(4, "papertino");
+        mapTest.put(6, "pluto");
+        assertEquals(mapTest.size(), keySet.size());
+        assertEquals(mapTest.size(), valueSet.size());
+        assertEquals(mapTest.size(), entrySet.size());
+
     }
 
     /**
@@ -516,7 +523,7 @@ public class MapAdapterTest {
      * <b>Summary</b> : map is filled and hashcode invoceted. Than hascode is
      * calcolated manuelly. Then compared each other</br>
      *
-     * <b>Design</b> : test check if hashCode method make the same hashCode as given
+     * <b>Design</b> : test checks if hashCode method make the same hashCode as given
      * formula</br>
      *
      * <b>Test Description</b> : hashCode is manually mande and with method. Then
@@ -558,6 +565,22 @@ public class MapAdapterTest {
         keyIter = keySet.iterator();
     }
 
+    /**
+     * <b>Method</b> hasNext()</br>
+     *
+     * <b>Summary</b> : test checks if hasNext return false when map is empty or when it at its last position. The same test is made also fo every set</br>
+     *
+     * <b>Design</b> : test is build to test method with empty or full map </br>
+     *
+     * <b>Test Description</b> : hasNext is tested with empty map, iterating the map and at the end of the map</br>
+     *
+     * <b>Pre-conditions</b> : Map has to be initialized</br>
+     *
+     * <b>Post-condition</b> : N/A</br>
+     *
+     * <b>Expected results</b> : True if index is not on the last item, false otherwise</br>
+     *
+     */
     @Test
     public void hasNextTest() {
         mapTest = new MapAdapter();
@@ -583,10 +606,25 @@ public class MapAdapterTest {
         assertFalse(keyIter.hasNext());
     }
 
+    /**
+     * <b>Method</b> next()</br>
+     *
+     * <b>Summary</b> : test checks if next throw exception empty or it at its last position, the indexx++ element if hasNext()</br>
+     *
+     * <b>Design</b> : test is build to test method with empty or full map </br>
+     *
+     * <b>Test Description</b> : hasNext is tested iterating the map and at the end of the map (throwing exception)</br>
+     *
+     * <b>Pre-conditions</b> : Map has to be initialized</br>
+     *
+     * <b>Post-condition</b> : N/A</br>
+     *
+     * <b>Expected results</b> : elementAt(index++) if index is not on the last item, exception otherwise</br>
+     *
+     */
     @Test
     public void nextTest() {
         fill();
-
         createIterator();
 
         int i = 19;
@@ -612,6 +650,22 @@ public class MapAdapterTest {
         });
     }
 
+    /**
+     * <b>Method</b> remove()</br>
+     *
+     * <b>Summary</b> : test, for easier understanding, is divided. First it check if remove on the map throws excpetion when map is empty, it fills map and empties it element by element. After initializing map again, it makes the same test, but checking backing on sets</br>
+     *
+     * <b>Design</b> : test is divded in two parts: testing remove on maps, testing remove on sets and chacking remove on maps</br>
+     *
+     * <b>Test Description</b> : first it tests remove on map (also excpetion), then remove on sets and backing on maps</br>
+     *
+     * <b>Pre-conditions</b> : Map has to be initialized</br>
+     *
+     * <b>Post-condition</b> : Map is emptied by remove</br>
+     *
+     * <b>Expected results</b> :  Map empty after calling remove() on every entry. Throwing right exception when called</br>
+     *
+     */
     @Test
     public void iterRemoveTest() {
         fill();
@@ -679,22 +733,63 @@ public class MapAdapterTest {
     }
 
     // SetAdapter Test
+    /**
+     * <b>Method</b> : size()</br>
+     *
+     * <b>Summary</b> : check the size of sets. Making sets befor filling to check backing. Fill map with entries and
+     * test size equals to number of entries</br>
+     *
+     * <b>Design</b> : this test has only two cases: empty map or not empty. Both
+     * are tested </br>
+     *
+     * <b>Test Description</b> : size is checked after after filling map (equals 20)</br>
+     *
+     * <b>Pre-conditions</b> : map has to be initialized</br>
+     *
+     * <b>Post-condition</b> : N/A</br>
+     *
+     * <b>Exptected results</b> : two different sizes, 0 and number of entries</br>
+     *
+     */
     @Test
     public void setSizeTest() {
-        fill();
         createIterator();
+        fill();
         assertEquals(entrySet.size(), 20);
         assertEquals(keySet.size(), 20);
         assertEquals(valueSet.size(), 20);
     }
-
+    
+    /**
+     * <b>Method</b> : isEmpty()</br>
+     *
+     * <b>Summary</b> : check the size of sets. Making sets befor filling to check backing. Fill map with entries and
+     * test size equals to number of entries</br>
+     *
+     * <b>Design</b> : this test has only two cases: empty map or not empty. Both
+     * are tested </br>
+     *
+     * <b>Test Description</b> : size is checked after after filling map (equals 20)</br>
+     *
+     * <b>Pre-conditions</b> : map has to be initialized</br>
+     *
+     * <b>Post-condition</b> : N/A</br>
+     *
+     * <b>Exptected results</b> : two different sizes, 0 and number of entries</br>
+     *
+     */
     @Test
     public void setIsEmptyTest() {
         createIterator();
-        assertEquals(entrySet.size(), 0);
-        assertEquals(keySet.size(), 0);
-        assertEquals(valueSet.size(), 0);
+        assertTrue(entrySet.isEmpty());
+        assertTrue(keySet.isEmpty());
+        assertTrue(valueSet.isEmpty());
+        fill();
+        assertFalse(entrySet.isEmpty());
+        assertFalse(keySet.isEmpty());
+        assertFalse(valueSet.isEmpty());
     }
+
 
     @Test
     public void setContainsTest() {
