@@ -32,6 +32,25 @@ public class MapAdapterTest {
     }
 
     // MapAdapter Test
+    /**
+     * <b>Method</b> : size()</br>
+     *
+     * <b>Summary</b> : check the size of the map. Fill the map with entries and
+     * test size equals to number of entries</br>
+     *
+     * <b>Design</b> : this test has only two cases: empty map or not empty. Both
+     * are tested </br>
+     *
+     * <b>Test Description</b> : size is checked after initialization (equals 0) and
+     * after filling map (equals 20)</br>
+     *
+     * <b>Pre-conditions</b> : map has to be initialized</br>
+     *
+     * <b>Post-condition</b> : N/A</br>
+     *
+     * <b>Exptected results</b> : two different sizes, 0 and number of entries</br>
+     *
+     */
     @Test
     public void sizeTest() {
         assertEquals(mapTest.size(), 0);
@@ -39,6 +58,25 @@ public class MapAdapterTest {
         assertEquals(mapTest.size(), 20);
     }
 
+    /**
+     * <b>Method</b> isEmpty() </br>
+     *
+     * <b>Summary</b> : test the presence of entries. If any, returns false, true
+     * otherwise</br>
+     *
+     * <b>Design</b> : test an often used method, a quick way to test the presence
+     * of any entry. Both chances are tested</br>
+     *
+     * <b>Description</b> : isEmpty is tested with a just initialized map and after
+     * being filled with 20 entries</br>
+     *
+     * <b>Pre-conditions</b> : map has to be initialized</br>
+     *
+     * <b>Post-condition</b> : N/A</br>
+     *
+     * <b>Exptected results</b> : true if map has no entry, false otherwise</br>
+     *
+     */
     @Test
     public void emptyTest() {
         assertTrue(mapTest.isEmpty());
@@ -46,6 +84,27 @@ public class MapAdapterTest {
         assertFalse(mapTest.isEmpty());
     }
 
+    /**
+     * <b>Method</b> containsKey(Object)</br>
+     *
+     * <b>Summary</b> : with an empty map the error is thrown. Then, we put one
+     * entry and check if method sees it. Last, if method return false with a wrong
+     * key</br>
+     *
+     * <b>Design</b> : test the presence (and the absence) of a key in a key-value
+     * map. It has three chances: null, present, absent. All are tested</br>
+     *
+     * <b>Test Description</b> : with a null key, an existing key and a false key,
+     * the test runs thorght three different results</br>
+     *
+     * <b>Pre-conditions</b> : map has to be initialized</br>
+     *
+     * <b>Post-condition</b> : N/A</br>
+     *
+     * <b>Exptected results</b> : true if key is found, false otherwise. Throwing
+     * right exception when called</br>
+     *
+     */
     @Test
     public void containsKeyTest() {
         assertThrows(NullPointerException.class, () -> {
@@ -53,17 +112,60 @@ public class MapAdapterTest {
         });
         mapTest.put("chiave", "valore");
         assertTrue(mapTest.containsKey("chiave"));
+        assertFalse(mapTest.containsKey("chiave test"));
     }
 
+    /**
+     * <b>Method</b> containsValue(Object)</br>
+     *
+     * <b>Summary</b> : with an empty map the error is thrown. Then, we put one
+     * entry and check if method sees it. Last, if method return false with a wrong
+     * value</br>
+     *
+     * <b>Design</b> : test the presence (and the absence) of a value in a key-value
+     * map. It has three chances: null, present, absent. All are tested</br>
+     *
+     * <b>Test Description</b> : with a null value, an existing and a false one, the
+     * test runs thorght three different results</br>
+     *
+     * <b>Pre-conditions</b> : map has to be initialized</br>
+     *
+     * <b>Post-condition</b> : N/A</br>
+     *
+     * <b>Exptected results</b> : true if key is found, false otherwise. Throwing
+     * right exception when called</br>
+     *
+     */
     @Test
     public void containsValueTest() {
         assertThrows(NullPointerException.class, () -> {
             mapTest.containsValue(null);
         });
         mapTest.put("chiave", "valore");
+        assertFalse(mapTest.containsValue("valore test"));
         assertTrue(mapTest.containsValue("valore"));
     }
 
+    /**
+     * <b>Method</b> get(Object)</br>
+     *
+     * <b>Summary</b> : with an empty map the error is thrown. Then, we put one
+     * entry and check if method sees it</br>
+     *
+     * <b>Design</b> : test the presence of a key in a key-value map, returning
+     * mapped value. It has three chances: null, present, absent. All are
+     * tested</br>
+     *
+     * <b>Test Description</b> : with a null key and an existing one, the test
+     * search and find the right value</br>
+     *
+     * <b>Pre-conditions</b> : map has to be initialized</br>
+     *
+     * <b>Post-condition</b> : N/A</br>
+     *
+     * <b>Exptected results</b> : value if key is found, null otherwise. Throwing
+     * right exception when called</br>
+     */
     @Test
     public void getTest() {
         assertThrows(NullPointerException.class, () -> {
@@ -73,6 +175,31 @@ public class MapAdapterTest {
         assertEquals("valore", mapTest.get("chiave"));
     }
 
+    /**
+     * <b>Method</b> put(Object,Object)</br>
+     *
+     * <b>Summary</b> : with an empty key-value errors are thrown. Then, we put one
+     * entry, check the null return. The mapped value is changed (and returned).
+     * Lastly, we search for the new value. For backing, map is initialized again
+     * and filled. We alsoe create set for keys, values and entries and every one
+     * with an iterator. Map is changed with some put() and results are searched in
+     * every set.</br>
+     * 
+     * <b>Design</b> : testing different way of put, as a new entry or as a change
+     * of a value, inside the mape and, thaks to backing, also in every set</br>
+     *
+     * <b>Test Description</b> : with a null key-value and an existingone, test runs
+     * thorght different results. Then map is modified and set are checked to verify
+     * backing</br>
+     *
+     * <b>Pre-conditions</b> : map has to be initialized</br>
+     *
+     * <b>Post-condition</b> : map has to have inserted entries</br>
+     *
+     * <b>Exptected results</b> : returning right value for an already exinting key.
+     * Find map-inserted key-vale inside key, entry and value sets. Throwing right
+     * exception when called</br>
+     */
     @Test
     public void putTest() {
         assertThrows(NullPointerException.class, () -> {
@@ -104,6 +231,26 @@ public class MapAdapterTest {
 
     }
 
+    /**
+     * <b>Method</b> remove(Object)</br>
+     *
+     * <b>Summary</b> : with an empty key errors are thrown. Then, wetry to remove a
+     * non exiting key and an exiting one, returning null and mapped value.</br>
+     * 
+     * <b>Design</b> : test wants to verify how removing entries works, on the map
+     * and on backed sets</br>
+     *
+     * <b>Test Description</b> : test calls error-situations. Then it removes object
+     * from the map, to check return and backing in every set</br>
+     *
+     * <b>Pre-conditions</b> : map has to be initialized</br>
+     *
+     * <b>Post-condition</b> : removed entries no more inside the map</br>
+     *
+     * <b>Exptected results</b> : returning right value for an already exinting key.
+     * Find map-inserted key-vale inside key, entry and value sets. Throwing right
+     * exception when called</br>
+     */
     @Test
     public void removeTest() {
         assertThrows(NullPointerException.class, () -> {
@@ -130,20 +277,41 @@ public class MapAdapterTest {
         assertFalse(entrySet.contains(obj));
     }
 
+    /**
+     * <b>Method</b> putAll(HCollection)</br>
+     *
+     * <b>Summary</b> : with an empty map error is thrown. Map is filled, set and
+     * iterators are made. After mathod call, we search for equality between two
+     * maps and in sets</br>
+     * 
+     * <b>Design</b> : test wants to verify how removing entries works, on the map
+     * and on backed sets</br>
+     *
+     * <b>Test Description</b> : test calls error-situations. Then it removes object
+     * from the map, to check return and backing in every set</br>
+     *
+     * <b>Pre-conditions</b> : map has to be initialized</br>
+     *
+     * <b>Post-condition</b> : filled made has to be contained in testMap (and in
+     * every set)</br>
+     *
+     * <b>Exptected results</b> : finding all myMap values inside testMap and sets.
+     * Throwing right exception when called</br>
+     */
     @Test
     public void putAllTest() {
         assertThrows(NullPointerException.class, () -> {
             mapTest.putAll(null);
         });
 
+        createIterator();
+
         fill();
 
         MapAdapter myMap = new MapAdapter();
-        
-        createIterator();
 
         myMap.putAll(mapTest);
-        
+
         for (int i = 0; i < 20; i++) {
             String tmp = "valore n. " + i;
             assertEquals(tmp, myMap.get(i));
@@ -157,6 +325,27 @@ public class MapAdapterTest {
         }
     }
 
+    /**
+     * <b>Method</b> clear()</br>
+     *
+     * <b>Summary</b> : map is filled and checked if its notEmpty (same every set).
+     * Calling clear method only on map, test checks if it is empty (and every
+     * set)</br>
+     *
+     * <b>Design</b> : map is fille and cleaned. Set are only checked if they are
+     * really backed by the map</br>
+     *
+     * <b>Test Description</b> : it checks if the clear() works as intended and
+     * clean up map and sets</br>
+     *
+     * <b>Pre-conditions</b> : map has to be initialized</br>
+     *
+     * <b>Post-condition</b> : Map and sets needs to be empty</br>
+     *
+     * <b>Expected results</b> : Map and all sets empty. Throwing right exception
+     * when called</br>
+     *
+     */
     @Test
     public void clearTest() {
         fill();
@@ -178,6 +367,27 @@ public class MapAdapterTest {
         assertTrue(entrySet.isEmpty());
     }
 
+    /**
+     * <b>Method</b> keySet()</br>
+     *
+     * <b>Summary</b> : we try to call method twice (not permitted). Later, we test
+     * if all keySet are iside the map and if they have same size</br>
+     *
+     * <b>Design</b> : map is filled after creating set. This way, we check both
+     * keySet creation and baacking map->set</br>
+     *
+     * <b>Test Description</b> : test checks if key set cant be made twice from same
+     * map. Later, if key map has all keys</br>
+     *
+     * <b>Pre-conditions</b> : map has to be initialized and alreday with one
+     * keySet</br>
+     *
+     * <b>Post-condition</b> : Map and key set has same keys</br>
+     *
+     * <b>Expected results</b> : Map and key set with same keys. Throwing right
+     * exception when called</br>
+     *
+     */
     @Test
     public void keySetTest() {
         mapTest.keySet();
@@ -193,8 +403,30 @@ public class MapAdapterTest {
 
         while (testIter.hasNext())
             assertTrue(mapTest.containsKey(testIter.next()));
+        assertEquals(mapTest.size(), testSet.size());
     }
 
+    /**
+     * <b>Method</b> values()</br>
+     *
+     * <b>Summary</b> : we try to call method twice (not permitted). Later, we test
+     * if all values are iside the map and if they have same size</br>
+     *
+     * <b>Design</b> : map is filled after creating set. This way, we check both
+     * keySet creation and baacking map->set</br>
+     *
+     * <b>Test Description</b> : test checks if key set cant be made twice from same
+     * map. Later, if key map has all values</br>
+     *
+     * <b>Pre-conditions</b> : map has to be initialized and alreday with one
+     * valueSet</br>
+     *
+     * <b>Post-condition</b> : Map and value set has same values</br>
+     *
+     * <b>Expected results</b> : Map and value set with same values. Throwing right
+     * exception when called</br>
+     *
+     */
     @Test
     public void valuesTest() {
         mapTest.values();
@@ -209,16 +441,60 @@ public class MapAdapterTest {
 
         while (testIter.hasNext())
             assertTrue(mapTest.containsValue(testIter.next()));
+        assertEquals(mapTest.size(), testSet.size());
     }
 
+    /**
+     * <b>Method</b> values()</br>
+     *
+     * <b>Summary</b> : we try to call method twice (not permitted). By cheking set
+     * size before and after filling map, we check backing activity</br>
+     *
+     * <b>Design</b> : map is filled after creating set. This way, we check if
+     * entrySet supports it and is backed</br>
+     *
+     * <b>Test Description</b> : test checks if entry set cant be made twice from
+     * same map and if entrySet grows with the map</br>
+     *
+     * <b>Pre-conditions</b> : map has to be initialized and alreday with one
+     * entrySet</br>
+     *
+     * <b>Post-condition</b> : Map and value set has same values</br>
+     *
+     * <b>Expected results</b> : Map and value set with same values. Throwing right
+     * exception when called</br>
+     *
+     */
     @Test
     public void entrySetTest() {
-        mapTest.entrySet();
+        HSet testSet = mapTest.entrySet();
         assertThrows(UnsupportedOperationException.class, () -> {
             mapTest.entrySet();
         });
+        assertEquals(0, testSet.size());
+        fill();
+        assertEquals(mapTest.size(), testSet.size());
     }
 
+    /**
+     * <b>Method</b> equals()</br>
+     *
+     * <b>Summary</b> : testMap and myMap are filled the samt way, then
+     * comapred</br>
+     *
+     * <b>Design</b> : two different maps are manually filled with same entries.
+     * Then compared</br>
+     *
+     * <b>Test Description</b> : it checks if the equals method works as intended
+     * and returns true if Object are the same, false otherwise</br>
+     *
+     * <b>Pre-conditions</b> : Both Maps have to be initialized and filled</br>
+     *
+     * <b>Post-condition</b> : N/A</br>
+     *
+     * <b>Expected results</b> : True if they are the same, false otherwise</br>
+     *
+     */
     @Test
     public void equalsTest() {
         fill();
@@ -234,6 +510,26 @@ public class MapAdapterTest {
         assertTrue(mapTest.equals(myMap));
     }
 
+    /**
+     * <b>Method</b> hashCode()</br>
+     *
+     * <b>Summary</b> : map is filled and hashcode invoceted. Than hascode is
+     * calcolated manuelly. Then compared each other</br>
+     *
+     * <b>Design</b> : test check if hashCode method make the same hashCode as given
+     * formula</br>
+     *
+     * <b>Test Description</b> : hashCode is manually mande and with method. Then
+     * comapred</br>
+     *
+     * <b>Pre-conditions</b> : Map has to be initialized and filled</br>
+     *
+     * <b>Post-condition</b> : N/A</br>
+     *
+     * <b>Expected results</b> : True hashCode() is equals to "manual" hashcode,
+     * false otherwise</br>
+     *
+     */
     @Test
     public void hashCodeTest() {
         fill();
@@ -382,6 +678,7 @@ public class MapAdapterTest {
         assertTrue(keySet.isEmpty());
     }
 
+    // SetAdapter Test
     @Test
     public void setSizeTest() {
         fill();

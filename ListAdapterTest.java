@@ -19,16 +19,67 @@ public class ListAdapterTest {
         listTest = new ListAdapter();
     }
 
+    /**
+     * <b>Method</b> size()<br>
+     *
+     * <b>Summary</b> : Size method test, check if the list size is 0.<br>
+     *
+     * <b>Design</b> : Check the size of list<br>
+     *
+     * <b>Test description</b> : Check if the list is void<br>
+     *
+     * <b>Pre-conditions</b> : The List is initialized.<br>
+     *
+     * <b>Post-condition</b> : N/A<br>
+     *
+     * <b>Exptected results</b> : true if the size of initialized list is 0, false
+     * otherwise.<br>
+     */
     @Test
     public void sizeTest() {
         assertEquals(listTest.size(), 0);
     }
 
+    /**
+     * <b>Method</b> isEmpty()<br>
+     * 
+     * <b>Summary</b> : Check if the list is null size.<br>
+     * 
+     * <b>Design</b> : return true if the list is empty.<br>
+     * 
+     * <b>Test description</b> : Check if initialized list is empty.<br>
+     * 
+     * <b>Pre-condition</b> :ListAdapter Object initialized, with size equal to
+     * zero.<br>
+     * 
+     * <b>Post-conditions</b> : N/A<br>
+     * 
+     * <b>Expected results</b> : return true if the size list is zero.<br>
+     */
     @Test
     public void isEmptyTest() {
         assertTrue(listTest.isEmpty());
     }
 
+    /**
+     * <b>Method<b> contains()
+     * 
+     * <b>Summary</b> : call contains with an object as parameter and make sure that
+     * the method return true, false if the element is not on the list. <br>
+     * 
+     * <b>Design</b> : Check that some objects are in the list, one doesnt. <br>
+     * 
+     * <b>Test description</b> : Check if a null element generate NullPointer
+     * exception, then add elements to the list and check if the list contains the
+     * object. Searching for a non insterted object<br>
+     * 
+     * <b>Pre-conditions</b> : List initialized.<br>
+     * 
+     * <b>Post-condition</b> : N/A<br>
+     * 
+     * <b>Expected results</b> : true if argoument is inside list, false
+     * otherwise.<br>
+     */
     @Test
     public void containsTest() {
         assertThrows(NullPointerException.class, () -> {
@@ -295,7 +346,7 @@ public class ListAdapterTest {
         init();
         for (int i = 0; i < 20; i++)
             listTest.add("valore n. " + i);
-        
+
         subList = listTest.subList(0, 20);
 
         subList.retainAll(evenList);
@@ -422,7 +473,7 @@ public class ListAdapterTest {
         subList = listTest.subList(0, 1);
         subList.add(0, "test");
         assertEquals("test", listTest.get(0));
-        
+
         init();
         for (int i = 0; i < 20; i++) {
             listTest.add("valore n. " + i);
