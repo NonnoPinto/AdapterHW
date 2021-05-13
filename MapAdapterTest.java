@@ -5,6 +5,7 @@ import java.util.*;
 
 import static org.junit.Assert.*;
 import org.junit.Test;
+import org.graalvm.compiler.nodes.EntryMarkerNode;
 import org.junit.Before;
 
 public class MapAdapterTest {
@@ -523,8 +524,8 @@ public class MapAdapterTest {
      * <b>Summary</b> : map is filled and hashcode invoceted. Than hascode is
      * calcolated manuelly. Then compared each other</br>
      *
-     * <b>Design</b> : test checks if hashCode method make the same hashCode as given
-     * formula</br>
+     * <b>Design</b> : test checks if hashCode method make the same hashCode as
+     * given formula</br>
      *
      * <b>Test Description</b> : hashCode is manually mande and with method. Then
      * comapred</br>
@@ -568,17 +569,20 @@ public class MapAdapterTest {
     /**
      * <b>Method</b> hasNext()</br>
      *
-     * <b>Summary</b> : test checks if hasNext return false when map is empty or when it at its last position. The same test is made also fo every set</br>
+     * <b>Summary</b> : test checks if hasNext return false when map is empty or
+     * when it at its last position. The same test is made also fo every set</br>
      *
      * <b>Design</b> : test is build to test method with empty or full map </br>
      *
-     * <b>Test Description</b> : hasNext is tested with empty map, iterating the map and at the end of the map</br>
+     * <b>Test Description</b> : hasNext is tested with empty map, iterating the map
+     * and at the end of the map</br>
      *
      * <b>Pre-conditions</b> : Map has to be initialized</br>
      *
      * <b>Post-condition</b> : N/A</br>
      *
-     * <b>Expected results</b> : True if index is not on the last item, false otherwise</br>
+     * <b>Expected results</b> : True if index is not on the last item, false
+     * otherwise</br>
      *
      */
     @Test
@@ -609,17 +613,20 @@ public class MapAdapterTest {
     /**
      * <b>Method</b> next()</br>
      *
-     * <b>Summary</b> : test checks if next throw exception empty or it at its last position, the indexx++ element if hasNext()</br>
+     * <b>Summary</b> : test checks if next throw exception empty or it at its last
+     * position, the indexx++ element if hasNext()</br>
      *
      * <b>Design</b> : test is build to test method with empty or full map </br>
      *
-     * <b>Test Description</b> : hasNext is tested iterating the map and at the end of the map (throwing exception)</br>
+     * <b>Test Description</b> : hasNext is tested iterating the map and at the end
+     * of the map (throwing exception)</br>
      *
      * <b>Pre-conditions</b> : Map has to be initialized</br>
      *
      * <b>Post-condition</b> : N/A</br>
      *
-     * <b>Expected results</b> : elementAt(index++) if index is not on the last item, exception otherwise</br>
+     * <b>Expected results</b> : elementAt(index++) if index is not on the last
+     * item, exception otherwise</br>
      *
      */
     @Test
@@ -653,17 +660,23 @@ public class MapAdapterTest {
     /**
      * <b>Method</b> remove()</br>
      *
-     * <b>Summary</b> : test, for easier understanding, is divided. First it check if remove on the map throws excpetion when map is empty, it fills map and empties it element by element. After initializing map again, it makes the same test, but checking backing on sets</br>
+     * <b>Summary</b> : test, for easier understanding, is divided. First it check
+     * if remove on the map throws excpetion when map is empty, it fills map and
+     * empties it element by element. After initializing map again, it makes the
+     * same test, but checking backing on sets</br>
      *
-     * <b>Design</b> : test is divded in two parts: testing remove on maps, testing remove on sets and chacking remove on maps</br>
+     * <b>Design</b> : test is divded in two parts: testing remove on maps, testing
+     * remove on sets and chacking remove on maps</br>
      *
-     * <b>Test Description</b> : first it tests remove on map (also excpetion), then remove on sets and backing on maps</br>
+     * <b>Test Description</b> : first it tests remove on map (also excpetion), then
+     * remove on sets and backing on maps</br>
      *
      * <b>Pre-conditions</b> : Map has to be initialized</br>
      *
      * <b>Post-condition</b> : Map is emptied by remove</br>
      *
-     * <b>Expected results</b> :  Map empty after calling remove() on every entry. Throwing right exception when called</br>
+     * <b>Expected results</b> : Map empty after calling remove() on every entry.
+     * Throwing right exception when called</br>
      *
      */
     @Test
@@ -736,13 +749,14 @@ public class MapAdapterTest {
     /**
      * <b>Method</b> : size()</br>
      *
-     * <b>Summary</b> : check the size of sets. Making sets befor filling to check backing. Fill map with entries and
-     * test size equals to number of entries</br>
+     * <b>Summary</b> : check the size of sets. Making sets befor filling to check
+     * backing. Fill map with entries and test size equals to number of entries</br>
      *
      * <b>Design</b> : this test has only two cases: empty map or not empty. Both
      * are tested </br>
      *
-     * <b>Test Description</b> : size is checked after after filling map (equals 20)</br>
+     * <b>Test Description</b> : size is checked after after filling map (equals
+     * 20)</br>
      *
      * <b>Pre-conditions</b> : map has to be initialized</br>
      *
@@ -759,23 +773,24 @@ public class MapAdapterTest {
         assertEquals(keySet.size(), 20);
         assertEquals(valueSet.size(), 20);
     }
-    
+
     /**
      * <b>Method</b> : isEmpty()</br>
      *
-     * <b>Summary</b> : check the size of sets. Making sets befor filling to check backing. Fill map with entries and
-     * test size equals to number of entries</br>
+     * <b>Summary</b> : check size==0 of sets. Making sets befor filling to check
+     * backing.</br>
      *
      * <b>Design</b> : this test has only two cases: empty map or not empty. Both
      * are tested </br>
      *
-     * <b>Test Description</b> : size is checked after after filling map (equals 20)</br>
+     * <b>Test Description</b> : method isEmpty is checked with empty and filled
+     * map</br>
      *
      * <b>Pre-conditions</b> : map has to be initialized</br>
      *
      * <b>Post-condition</b> : N/A</br>
      *
-     * <b>Exptected results</b> : two different sizes, 0 and number of entries</br>
+     * <b>Exptected results</b> : true if map is empty, false otherwise</br>
      *
      */
     @Test
@@ -790,7 +805,26 @@ public class MapAdapterTest {
         assertFalse(valueSet.isEmpty());
     }
 
-
+    /**
+     * <b>Method</b> : contains(Object)</br>
+     *
+     * <b>Summary</b> : first, test generates an exception, using null argoument.
+     * Then it search for different key-value in map and sets</br>
+     *
+     * <b>Design</b> : test is based on searching existing and not existing entries.
+     * </br>
+     *
+     * <b>Test Description</b> : test throws exception, then search for entries</br>
+     *
+     * <b>Pre-conditions</b> : map has to be initialized and filled iwth some
+     * values</br>
+     *
+     * <b>Post-condition</b> : N/A</br>
+     *
+     * <b>Exptected results</b> : true if map is entry in inside map, false
+     * otherwise</br>
+     *
+     */
     @Test
     public void setContainsTest() {
         fill();
@@ -810,7 +844,24 @@ public class MapAdapterTest {
         assertFalse(keySet.contains(20));
         assertFalse(valueSet.contains("valore n. " + 30));
     }
-
+    
+    /**
+     * <b>Method</b> : to Array(Object[])</br>
+     *
+     * <b>Summary</b> : test create arrays in two ways: manually and by method. Then it checks if they are equals</br>
+     *
+     * <b>Design</b> : test is based on comparison between manully made array and method toArray</br>
+     *
+     * <b>Test Description</b> : test make array by method and manuall, then make a comaprison</br>
+     *
+     * <b>Pre-conditions</b> : map has to be initialized and filled iwth some
+     * values</br>
+     *
+     * <b>Post-condition</b> : We have arrays from all sets</br>
+     *
+     * <b>Exptected results</b> : arrays with key, values and entries</br>
+     *
+     */
     @Test
     public void setToArrayTest() {
         fill();
@@ -841,6 +892,7 @@ public class MapAdapterTest {
 
         assertEquals(ValArr, myVArr);
         assertEquals(KeyArr, myKArr);
+        assert
     }
 
     @Test
