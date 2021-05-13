@@ -2,6 +2,8 @@ package myAdapter;
 
 import java.util.*;
 
+import javax.lang.model.element.Element;
+
 //There arent any ClassCastExcpetion (and similar exception) cuz we r supposing everything is Object
 
 public class ListAdapter implements HList {
@@ -13,7 +15,7 @@ public class ListAdapter implements HList {
     // clone == null AND sub != null --> subList with a reference to the original
     // we cant have both != null cuz methods dont implement a sublist froma sublist
     private Subber sub; // helper class to save all sublist datas
-    private ListAdapter clone; // reference to the sublist class: the "original" List track the new sublist
+    private ListAdapter clone; // reference to the sublist class: the "original" List tracks the new sublist
                                // (yes, its a stub)
 
     // With followings constructors, "myVec" will always be the more "usefull"
@@ -97,13 +99,12 @@ public class ListAdapter implements HList {
         if (o == null)
             throw new NullPointerException();
 
-        // check if this ListAdapater has a sublist
-        // if true, also sublist is modified
-        if (this.clone != null)
-            if (this.myVec.size() < this.clone.sub.to) { // if o is added at the same portion of the sublist
-                this.clone.myVec.addElement(o); // add o to sublist
-                this.clone.sub.to++; // and update indexTo
-            }
+        // check if this ListAdapater is a sublist
+        // if true, also original list is modified
+        if (this.sub != null) {
+            this.sub.original.myVec.insertElementAt(o, this.sub.to);
+            this.sub.to++; // and update indexTo
+        }
 
         // add o to list
         this.myVec.addElement(o);
@@ -115,19 +116,13 @@ public class ListAdapter implements HList {
     public boolean remove(Object o) {
         if (o == null)
             throw new NullPointerException();
-
-        if (this.myVec.contains(o)) {
-            // check if this ListAdapater has a sublist
-            // if true, also sublist is modified
-            if (this.clone != null)
-                if (this.myVec.indexOf(o) < this.clone.sub.to // if o is deleted at the same portion of the sublist
-                        && this.myVec.indexOf(o) > this.clone.sub.from) {
-                    this.clone.myVec.removeElement(o); // remove o from sublist
-                    if (this.myVec.indexOf(o) == this.clone.sub.from) // and update index
-                        this.clone.sub.from++;
-                    else
-                        this.clone.sub.to--;
-                }
+        // check if this ListAdapater is a sublist
+        if (this.myVec.contains(o) && this.sub != null) {
+            this.sub.original.myVec.removeElementAt(this.myVec.indexOf(o) + this.sub.from);
+            if (this.myVec.indexOf(o) == 0)
+                this.sub.from++;
+            else
+                this.sub.to--;
         }
 
         // remove o from list
@@ -161,14 +156,13 @@ public class ListAdapter implements HList {
         int oldSize;
         // check if this ListAdapater has a sublist
         // if true, also sublist is modified
-        if (this.clone != null)
-            if (this.myVec.size() < this.clone.sub.to) { // if o is added at the same portion of the sublist
-                HIterator tmpSub = c.iterator();
-                while (tmpSub.hasNext()) {
-                    this.clone.myVec.addElement(tmpSub.next()); // add o to sublist
-                    this.clone.sub.to++; // and update indexTo
-                }
+        if (this.sub != null) {
+            HIterator tmpSub = c.iterator();
+            while (tmpSub.hasNext()) {
+                this.sub.original.myVec.insertElementAt(tmpSub.next(), this.sub.to); // add o to sublist
+                this.sub.to++; // and update indexTo
             }
+        }
 
         // add to list
         oldSize = this.myVec.size(); // save old size
@@ -191,14 +185,16 @@ public class ListAdapter implements HList {
             return false;
 
         int oldSize;
-        if (this.clone != null && index < this.clone.myVec.size() && index > this.clone.sub.from) {
+        if (this.sub != null) {
             HIterator tmpSub = c.iterator();
+            int tmpIndex = index;
             while (tmpSub.hasNext()) {
-                this.clone.myVec.insertElementAt(tmpSub.next(), index - this.clone.sub.from);
-                index++;
-                this.clone.sub.to++;
+                this.sub.original.myVec.insertElementAt(tmpSub.next(), tmpIndex + this.sub.from);
+                tmpIndex++;
+                this.sub.to++;
             }
         }
+
         oldSize = this.myVec.size(); // save old size
         HIterator tmp = c.iterator();
         while (tmp.hasNext()) {
@@ -249,20 +245,18 @@ public class ListAdapter implements HList {
         if (c.isEmpty())
             return false;
 
-        int oldSize;
-
-        if (this.clone != null) {
-            oldSize = this.clone.myVec.size();
-            this.clone.retainAll(c);
-            for (int i = 0; i < (oldSize - this.clone.myVec.size()); i++)
-                this.clone.sub.to--;
-        }
+        int oldSize = this.myVec.size();
 
         HIterator tmp = this.iterator();
-        oldSize = this.myVec.size(); // save old size
         while (tmp.hasNext()) {
             Object elem = tmp.next();
-            if (!(c.contains(elem))) // if HCollection c list doesnt have that element
+            if (this.sub != null) {
+                if (!(c.contains(elem))) {
+                    this.sub.original.myVec.removeElementAt(this.myVec.indexOf(elem) + this.sub.from);
+                    this.sub.to--;
+                }
+            }
+            if (!(c.contains(elem))) // if list doesnt have that element
                 this.myVec.removeElement(elem); // then remove it from this list
         }
 
@@ -274,11 +268,13 @@ public class ListAdapter implements HList {
 
     @Override
     public void clear() {
-        if (this.clone != null) {
-            this.clone.clear();
-            this.sub.to = 0;
-            this.sub.from = 0;
+        if (this.sub != null) {
+            for (int i = this.sub.to-1; i >= this.sub.from; i--)
+                this.sub.original.myVec.removeElementAt(i);
+            this.sub.original.clone = null;
+            this.sub = null;
         }
+
         this.myVec.removeAllElements();
     }
 
@@ -355,9 +351,9 @@ public class ListAdapter implements HList {
             throw new IndexOutOfBoundsException();
 
         // sublist
-        if (this.clone != null && index > this.clone.sub.from && index < this.clone.sub.to) {
-            this.clone.add(index - this.clone.sub.from);
-            this.clone.sub.to++;
+        if (this.sub != null) {
+            this.sub.original.myVec.insertElementAt(element, index + this.sub.from);
+            this.sub.to++;
         }
 
         // list
@@ -370,8 +366,8 @@ public class ListAdapter implements HList {
             throw new IndexOutOfBoundsException();
 
         // sublist
-        if (this.clone != null && index > this.clone.sub.from && index < this.clone.sub.to) {
-            this.clone.myVec.removeElementAt(index - this.clone.sub.from);
+        if (this.sub != null) {
+            this.sub.original.myVec.removeElementAt(index + this.sub.from);
         }
 
         // list

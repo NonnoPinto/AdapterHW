@@ -103,39 +103,51 @@ public class MapAdapter implements HMap {
 
     @Override
     public void putAll(HMap t) {
+
         if (t == null)
             throw new NullPointerException();
         // boolean variables for backing
-        // they were not necessary, but they make code lighter, for reading and
-        // compiling
         boolean hasKeySet = this.keySet != null ? true : false;
-        boolean hasValueCol = this.entrySet != null ? true : false;
-        boolean hasEntrySet = this.valueCol != null ? true : false;
+        boolean hasValueCol = this.valueCol != null ? true : false;
+        boolean hasEntrySet = this.entrySet != null ? true : false;
 
+        MapAdapter myT = (MapAdapter) t;
         // keys and values set
-        HSet tmpKeySet = t.keySet();
-        HCollection tmpentrySet = t.values();
+        HSet tmpKeySet;
+        HCollection tmpValueSet;
+        try {
+            tmpKeySet = myT.keySet();
+        } catch (UnsupportedOperationException nsee) {
+            tmpKeySet = myT.keySet;
+        }
+        try {
+            tmpValueSet = myT.values();
+        } catch (UnsupportedOperationException nsee) {
+            tmpValueSet = myT.valueCol;
+        }
         // keys and values iterator
         HIterator iterK = tmpKeySet.iterator();
-        HIterator iterV = tmpentrySet.iterator();
+        HIterator iterV = tmpValueSet.iterator();
+
         // since iterator does not have "previous" or "get", i need to save keys and
         // values in order to use the multiple times
         Object myK;
         Object myV;
 
+        // iterator along two maps
         while (iterK.hasNext() && iterV.hasNext()) {
             myK = iterK.next();
             myV = iterV.next();
-            // backing NON FUNZIONA (add non partirà mai)
+            // adding at KeySet
             if (hasKeySet)
                 this.keySet.add(myK);
-            // backing NON FUNZIONA (add non partirà mai)
+            // adding at entrySet
             if (hasEntrySet)
                 this.entrySet.add(new EntryAdapter(myK, myV));
-            // backing NON FUNZIONA (add non partirà mai)
+            // adding at valueCol
             if (hasValueCol)
                 this.valueCol.add(myV);
-
+            // adding to map
             this.put(myK, myV);
         }
     }
@@ -151,11 +163,11 @@ public class MapAdapter implements HMap {
 
         if (this.valueCol != null && !(this.valueCol.isEmpty()))
             this.valueCol.clear();
-
+        // every set to null
         this.keySet = null;
         this.entrySet = null;
         this.valueCol = null;
-
+        // clear map
         this.hash.clear();
     }
 
@@ -371,7 +383,7 @@ public class MapAdapter implements HMap {
                 }
             }
 
-            //this.set.mySet.removeElementAt(index);
+            // this.set.mySet.removeElementAt(index);
             index--;
         }
     }
@@ -474,7 +486,7 @@ public class MapAdapter implements HMap {
         public boolean remove(Object o) {
             if (o == null)
                 throw new NullPointerException();
-            
+
             boolean ret = this.mySet.contains(o);
 
             if (this.map != null && o instanceof EntryAdapter) {
@@ -628,7 +640,7 @@ public class MapAdapter implements HMap {
         public boolean removeAll(HCollection c) {
             if (c.contains(null))
                 throw new NullPointerException();
-            
+
             if (c.isEmpty())
                 return false;
 
@@ -649,8 +661,7 @@ public class MapAdapter implements HMap {
                     if (hasMap) {
                         // using the setadapter.remove
                         this.map.remove(tmp);
-                    }
-                    else
+                    } else
                         this.mySet.removeElement(tmp);
                 }
             }
