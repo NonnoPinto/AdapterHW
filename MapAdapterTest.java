@@ -2,9 +2,9 @@ package myTest;
 
 import myAdapter.*;
 import java.util.*;
+
 import static org.junit.Assert.*;
 import org.junit.Test;
-
 import org.junit.Before;
 
 public class MapAdapterTest {
@@ -139,13 +139,22 @@ public class MapAdapterTest {
         fill();
 
         MapAdapter myMap = new MapAdapter();
-        myMap.putAll(mapTest);
+        
+        createIterator();
 
+        myMap.putAll(mapTest);
+        
         for (int i = 0; i < 20; i++) {
             String tmp = "valore n. " + i;
             assertEquals(tmp, myMap.get(i));
         }
-        // MANCA IL BACKING
+
+        // backing check
+        for (int i = 0; i < 20; i++) {
+            String tmp = "valore n. " + i;
+            assertTrue(valueSet.contains(tmp));
+            assertTrue(keySet.contains(i));
+        }
     }
 
     @Test
@@ -208,7 +217,6 @@ public class MapAdapterTest {
         assertThrows(UnsupportedOperationException.class, () -> {
             mapTest.entrySet();
         });
-        // COME FACCIO A VERIFICARE UN SET... DI CUI NON HO I METODI??
     }
 
     @Test
@@ -412,11 +420,6 @@ public class MapAdapterTest {
     }
 
     @Test
-    public void setIteratorTest(){
-        // TODO
-    }
-
-    @Test
     public void setToArrayTest() {
         fill();
         createIterator();
@@ -496,7 +499,6 @@ public class MapAdapterTest {
             entrySet.containsAll(null);
             valueSet.containsAll(null);
         });
-        // COME CAZZIO FACCIO
     }
 
     @Test
@@ -584,22 +586,6 @@ public class MapAdapterTest {
     }
 
     // EntryAdapter test
-
-    @Test
-    public void entryGetKeyTest() {
-        // COME CAZZO FACCIO
-    }
-
-    @Test
-    public void entryGetValueTest() {
-        // COME CAZZO FACCIO
-    }
-
-    @Test
-    public void entrySetValueTest() {
-        // COME CAZZO FACCIO
-    }
-
     @Test
     public void entryEqualsTest() {
         fill();

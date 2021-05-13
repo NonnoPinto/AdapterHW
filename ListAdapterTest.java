@@ -12,6 +12,7 @@ public class ListAdapterTest {
     ListAdapter listTest;
     HListIterator listIter;
     HIterator iterTest;
+    HList subList;
 
     @Before
     public void init() {
@@ -37,6 +38,9 @@ public class ListAdapterTest {
         listTest.add("test2");
         listTest.add("test3");
         assertTrue(listTest.contains("test"));
+        assertTrue(listTest.contains("test2"));
+        assertTrue(listTest.contains("test3"));
+        assertFalse(listTest.contains("test4"));
     }
 
     @Test
@@ -56,6 +60,21 @@ public class ListAdapterTest {
             listTest.add(null);
         });
         assertTrue(listTest.add("test"));
+        assertTrue(listTest.contains("test"));
+
+        // backing
+        init();
+        for (int i = 0; i < 100; i++)
+            listTest.add("valore n. " + i);
+
+        subList = listTest.subList(30, 40);
+        int oldSize = subList.size();
+
+        subList.add("test");
+        assertTrue(listTest.contains("test"));
+        assertEquals("test", listTest.get(40));
+
+        assertTrue(oldSize < subList.size());
     }
 
     @Test
@@ -67,6 +86,21 @@ public class ListAdapterTest {
         listTest.add("test");
         assertTrue(listTest.remove("test"));
         assertFalse(listTest.contains("test"));
+
+        // backing
+        init();
+        for (int i = 0; i < 100; i++)
+            listTest.add("valore n. " + i);
+
+        subList = listTest.subList(30, 40);
+        int oldSize = subList.size();
+
+        assertFalse(subList.remove("valore n. 1"));
+        assertTrue(listTest.contains("valore n. 30"));
+        assertTrue(subList.remove("valore n. 30"));
+        assertFalse(listTest.contains("valore n. 30"));
+
+        assertTrue(oldSize > subList.size());
     }
 
     @Test
@@ -109,6 +143,18 @@ public class ListAdapterTest {
         for (int i = 0; i < 20; i++) {
             assertEquals("valore n. " + i, listTest.get(i));
         }
+        // backing
+        init();
+        for (int i = 0; i < 20; i++)
+            listTest.add("valore n. " + i);
+        subList = listTest.subList(10, 15);
+
+        myList = new ListAdapter();
+        for (int i = 21; i < 40; i++)
+            myList.add("test n. " + i);
+
+        subList.addAll(myList);
+        assertTrue(listTest.containsAll(myList));
     }
 
     @Test
@@ -116,6 +162,7 @@ public class ListAdapterTest {
         assertThrows(NullPointerException.class, () -> {
             listTest.addAll(null);
         });
+
         ListAdapter myList = new ListAdapter();
         assertFalse(listTest.addAll(myList));
 
@@ -133,6 +180,28 @@ public class ListAdapterTest {
         });
 
         listTest.addAll(10, myList);
+        HIterator iter = listTest.iterator();
+        int k = 0;
+        while (iter.hasNext()) {
+            assertEquals("valore n. " + k, iter.next());
+            k++;
+        }
+
+        // backing
+        init();
+
+        for (int i = 0; i < 20; i++)
+            listTest.add("valore n. " + i);
+        subList = listTest.subList(10, 15);
+
+        myList.clear();
+        for (int i = 21; i < 40; i++)
+            myList.add("test n. " + i);
+
+        assertFalse(listTest.containsAll(myList));
+        subList.addAll(3, myList);
+        assertTrue(subList.containsAll(myList));
+        assertTrue(listTest.containsAll(myList));
     }
 
     @Test
@@ -178,6 +247,26 @@ public class ListAdapterTest {
         assertTrue(listTest.removeAll(evenList));
 
         assertTrue(listTest.equals(oddList));
+
+        // backing
+        evenList = new ListAdapter();
+
+        for (int i = 0; i < 100; i++)
+            listTest.add(i);
+
+        assertFalse(listTest.retainAll(evenList));
+
+        for (int i = 0; i < 100; i++)
+            if (i % 2 == 0)
+                evenList.add(i);
+
+        subList = listTest.subList(20, 40);
+
+        assertTrue(subList.removeAll(evenList));
+
+        HIterator iter = subList.iterator();
+        while (iter.hasNext())
+            assertTrue(((int) iter.next() % 2) != 0);// only odd numbers left
     }
 
     @Test
@@ -202,16 +291,36 @@ public class ListAdapterTest {
 
         assertTrue(listTest.equals(evenList));
 
+        // backing
+        init();
+        for (int i = 0; i < 20; i++)
+            listTest.add("valore n. " + i);
+        
+        subList = listTest.subList(0, 20);
+
+        subList.retainAll(evenList);
+        listTest.removeAll(evenList);
+        assertTrue(listTest.isEmpty());
     }
 
     @Test
     public void clearTest() {
 
         for (int i = 0; i < 20; i++)
-            listTest.add(i * 10);
+            listTest.add("valore n. " + i);
 
         listTest.clear();
         assertEquals(listTest.size(), 0);
+
+        // backing
+        init();
+        for (int i = 0; i < 20; i++)
+            listTest.add("valore n. " + i);
+
+        subList = listTest.subList(2, 18);
+        subList.clear();
+        assertTrue(subList.isEmpty());
+        assertEquals(4, listTest.size());
     }
 
     @Test
@@ -268,6 +377,8 @@ public class ListAdapterTest {
             listTest.add("valore n. " + i);
         }
 
+        subList = listTest.subList(0, 20);
+
         assertThrows(IndexOutOfBoundsException.class, () -> {
             listTest.set(-1, 5);
         });
@@ -281,6 +392,15 @@ public class ListAdapterTest {
 
         assertEquals("valore n. 2", listTest.set(2, "test"));
         assertEquals("test", listTest.get(2));
+
+        // backing list -> sublist
+        assertTrue(subList.contains("test"));
+        assertEquals("test", subList.get(2));
+
+        // backing sublist -> list
+        subList.set(2, "nuovo test");
+        assertTrue(listTest.contains("nuovo test"));
+        assertEquals("nuovo test", listTest.get(2));
     }
 
     @Test
@@ -297,6 +417,19 @@ public class ListAdapterTest {
 
         assertEquals("test", listTest.get(0));
         assertNotEquals("test!", listTest.get(0));
+
+        // backing
+        subList = listTest.subList(0, 1);
+        subList.add(0, "test");
+        assertEquals("test", listTest.get(0));
+        
+        init();
+        for (int i = 0; i < 20; i++) {
+            listTest.add("valore n. " + i);
+        }
+        subList = listTest.subList(4, 13);
+        subList.add(4, "test");
+        assertEquals("test", listTest.get(8));
     }
 
     @Test
@@ -314,6 +447,16 @@ public class ListAdapterTest {
 
         assertEquals("valore n. 2", listTest.remove(2));
         assertEquals("valore n. 3", listTest.remove(2));
+
+        // backing
+        init();
+        for (int i = 0; i < 20; i++) {
+            listTest.add("valore n. " + i);
+        }
+        subList = listTest.subList(4, 13);
+        assertTrue(listTest.contains("valore n. 8"));
+        subList.remove(4);
+        assertFalse(listTest.contains("valore n. 8"));
     }
 
     @Test
@@ -342,7 +485,7 @@ public class ListAdapterTest {
     }
 
     @Test
-    public void firstIistIteratorTest() {
+    public void firstListIteratorTest() {
 
         HListIterator iter = listTest.listIterator();
         assertFalse(iter.hasNext());
