@@ -68,14 +68,26 @@ public class MapAdapter implements HMap {
         if (key == null || value == null)
             throw new NullPointerException();
         // backing
-        if (keySet != null)
+        if (keySet != null && !(keySet.contains(key)))
             this.keySet.mySet.addElement(key);
         // backing
-        if (valueCol != null)
+        if (valueCol != null) {
+            Object tmp;
+            if (this.hash.containsKey(key)) {
+                tmp = this.hash.get(key);
+                if (this.valueCol.contains(tmp))
+                    this.valueCol.mySet.remove(tmp);
+            }
             this.valueCol.mySet.addElement(value);
+        }
         // backing
         if (entrySet != null) {
             EntryAdapter tmp = new EntryAdapter(key, value);
+            Object tmpV = this.hash.get(key);
+            if (tmpV != null) {
+                EntryAdapter toRemove = new EntryAdapter(key, tmpV);
+                this.entrySet.mySet.removeElement(toRemove);
+            }
             this.entrySet.mySet.addElement(tmp);
         }
 
@@ -106,10 +118,6 @@ public class MapAdapter implements HMap {
 
         if (t == null)
             throw new NullPointerException();
-        // boolean variables for backing
-        boolean hasKeySet = this.keySet != null ? true : false;
-        boolean hasValueCol = this.valueCol != null ? true : false;
-        boolean hasEntrySet = this.entrySet != null ? true : false;
 
         MapAdapter myT = (MapAdapter) t;
         // keys and values set
@@ -134,20 +142,11 @@ public class MapAdapter implements HMap {
         Object myK;
         Object myV;
 
-        // iterator along two maps
+        // iterator along argoument map
         while (iterK.hasNext() && iterV.hasNext()) {
             myK = iterK.next();
             myV = iterV.next();
-            // adding at KeySet
-            if (hasKeySet)
-                this.keySet.add(myK);
-            // adding at entrySet
-            if (hasEntrySet)
-                this.entrySet.add(new EntryAdapter(myK, myV));
-            // adding at valueCol
-            if (hasValueCol)
-                this.valueCol.add(myV);
-            // adding to map
+
             this.put(myK, myV);
         }
     }
