@@ -559,10 +559,7 @@ public class MapAdapter implements HMap {
             if (this.map != null)
                 throw new UnsupportedOperationException();
 
-            if (c.contains(null))
-                throw new NullPointerException();
-
-            if (c.isEmpty())
+            if (c.isEmpty() || c.equals(null))
                 return false;
 
             int oldSize = this.mySet.size();
@@ -580,9 +577,7 @@ public class MapAdapter implements HMap {
 
         @Override
         public boolean retainAll(HCollection c) {
-            if (c.contains(null))
-                throw new NullPointerException();
-            if (c.isEmpty())
+            if (c.isEmpty() || c.equals(null))
                 return false;
 
             boolean hasMap = false;
@@ -591,42 +586,31 @@ public class MapAdapter implements HMap {
 
             int oldSize = this.mySet.size();
 
-            HIterator iter = c.iterator();
-            Object tmp;
+            HIterator iter;
 
-            while (iter.hasNext()) {
-                tmp = iter.next();
-
-                if (!(this.mySet.contains(tmp))) {
-                    if (hasMap) {
-                        if (tmp instanceof EntryAdapter) {
-                            Object tmpKey = ((EntryAdapter) tmp).getKey();
-                            this.map.remove(tmpKey);
-                        } else if (this.isKey)
-                            this.map.remove(tmp);
-                        else {
-                            if (this.map.entrySet == null) {
-                                Object my_key = null;
-                                // cerating an entryset
-                                HSet tmpEntrySet = this.map.entrySet();
-                                HIterator tmpEntryIter = tmpEntrySet.iterator();
-                                while (tmpEntryIter.hasNext() || my_key == null)
-                                    if (tmp.equals(((EntryAdapter) tmpEntryIter.next()).getValue()))
-                                        my_key = tmp;
-                                this.remove(my_key);
-                                // removing entryset
-                                this.map.entrySet = null;
-                            } else {
-                                Object my_key = null;
-                                HIterator tmpEntryIter = this.map.entrySet.iterator();
-                                while (tmpEntryIter.hasNext() || my_key == null)
-                                    if (tmp.equals(((EntryAdapter) tmpEntryIter.next()).getValue()))
-                                        my_key = tmp;
-                                this.remove(my_key);
-                            }
-                        }
-                    }
+            if (hasMap) {
+                if (isKey) {
+                    if (this.map.keySet == null) {
+                        iter = this.map.keySet.iterator();
+                        this.map.keySet = null;
+                    } else
+                        iter = this.map.keySet.iterator();
+                } else if (isEntry) {
+                    if (this.map.entrySet == null) {
+                        iter = this.map.entrySet.iterator();
+                        this.map.entrySet = null;
+                    } else
+                        iter = this.map.entrySet.iterator();
+                } else {
+                    if (this.map.valueCol == null) {
+                        iter = this.map.valueCol.iterator();
+                        this.map.valueCol = null;
+                    } else
+                        iter = this.map.valueCol.iterator();
                 }
+                while (iter.hasNext())
+                    if (!(c.contains(iter.next())))
+                        iter.remove();
             }
 
             if (this.mySet.size() == oldSize) // if it has still the same size, nothing has been deleted
@@ -637,10 +621,7 @@ public class MapAdapter implements HMap {
 
         @Override
         public boolean removeAll(HCollection c) {
-            if (c.contains(null))
-                throw new NullPointerException();
-
-            if (c.isEmpty())
+            if (c.equals(null) || c.isEmpty())
                 return false;
 
             boolean hasMap = false;
