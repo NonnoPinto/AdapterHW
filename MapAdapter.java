@@ -630,26 +630,40 @@ public class MapAdapter implements HMap {
 
             int oldSize = this.mySet.size();
 
-            HIterator iter = c.iterator();
+            HIterator iter;
+            HIterator argIter = c.iterator();
 
-            Object tmp;
-
-            while (iter.hasNext()) {
-                tmp = iter.next();
-
-                if (this.mySet.contains(tmp)) {
-                    if (hasMap) {
-                        // using the setadapter.remove
-                        this.map.remove(tmp);
+            if (hasMap) {
+                if (isKey) {
+                    if (this.map.keySet == null) {
+                        iter = this.map.keySet.iterator();
+                        this.map.keySet = null;
                     } else
-                        this.mySet.removeElement(tmp);
+                        iter = this.map.keySet.iterator();
+                } else if (isEntry) {
+                    if (this.map.entrySet == null) {
+                        iter = this.map.entrySet.iterator();
+                        this.map.entrySet = null;
+                    } else
+                        iter = this.map.entrySet.iterator();
+                } else {
+                    if (this.map.valueCol == null) {
+                        iter = this.map.valueCol.iterator();
+                        this.map.valueCol = null;
+                    } else
+                        iter = this.map.valueCol.iterator();
+                }
+                while (argIter.hasNext()){
+                    Object tmp = argIter.next();
+                    if (this.contains(tmp))
+                        this.remove(tmp);
                 }
             }
 
             if (this.mySet.size() == oldSize) // if it has still the same size, nothing has been deleted
                 return false;
 
-            return false;
+            return true;
         }
 
         @Override
