@@ -419,7 +419,7 @@ public class ListAdapter implements HList {
         for (int i = 0; i < index; i++)
             iter.next();
 
-        return null;
+        return iter;
     }
 
     /*
