@@ -13,7 +13,7 @@ import junit.runner.Version;
 public class TestRunner {
 
     public static void main(String argv[]){
-        System.out.println("\n################Giovanni Zago 1226024 UniPd################\n");
+        /*System.out.println("\n################Giovanni Zago 1226024 UniPd################\n");
         System.out.println("========Testing class for MapAdapter and ListAdapter========\n");
         System.out.println("JUnit version: " + Version.id());
         
@@ -41,8 +41,8 @@ public class TestRunner {
 
         int total = testResultsL.getRunCount() + testResultsM.getRunCount();
         int fail = testResultsL.getFailures().size() + testResultsM.getFailures().size();
-        System.out.println("\n" + total + " test has been made and " + fail + " are failed.");
-        //JUnitCore.main("myTest.MapAdapterTest", "myTest.ListAdapterTest");
+        System.out.println("\n" + total + " test has been made and " + fail + " are failed.");*/
+        JUnitCore.main("myTest.MapAdapterTest", "myTest.ListAdapterTest");
     }
   
 }

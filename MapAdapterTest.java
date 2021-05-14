@@ -5,7 +5,6 @@ import java.util.*;
 
 import static org.junit.Assert.*;
 import org.junit.Test;
-import org.graalvm.compiler.nodes.EntryMarkerNode;
 import org.junit.Before;
 
 public class MapAdapterTest {
@@ -844,15 +843,18 @@ public class MapAdapterTest {
         assertFalse(keySet.contains(20));
         assertFalse(valueSet.contains("valore n. " + 30));
     }
-    
+
     /**
-     * <b>Method</b> : to Array(Object[])</br>
+     * <b>Method</b> : toArray(Object[])</br>
      *
-     * <b>Summary</b> : test create arrays in two ways: manually and by method. Then it checks if they are equals</br>
+     * <b>Summary</b> : test create arrays in two ways: manually and by method. Then
+     * it checks if they are equals</br>
      *
-     * <b>Design</b> : test is based on comparison between manully made array and method toArray</br>
+     * <b>Design</b> : test is based on comparison between manully made array and
+     * method toArray</br>
      *
-     * <b>Test Description</b> : test make array by method and manuall, then make a comaprison</br>
+     * <b>Test Description</b> : test make array by method and manuall, then make a
+     * comaprison</br>
      *
      * <b>Pre-conditions</b> : map has to be initialized and filled iwth some
      * values</br>
@@ -892,9 +894,29 @@ public class MapAdapterTest {
 
         assertEquals(ValArr, myVArr);
         assertEquals(KeyArr, myKArr);
-        assert
     }
 
+    /**
+     * <b>Method</b> remove(Object)</br>
+     *
+     * <b>Summary</b> : with an empty key errors are thrown. Then, we try to remove
+     * all entries from one set, to verify if all sets ane map are empty. Same with
+     * other sets. Meanwhile, aveery removed object is compared with what it is
+     * supposed to be</br>
+     * 
+     * <b>Design</b> : test wants to verify how removing entries works, on backed
+     * sets</br>
+     *
+     * <b>Test Description</b> : test calls error-situations. Then it removes object
+     * from a set, to check return and backing in every sets and in map</br>
+     *
+     * <b>Pre-conditions</b> : map has to be initialized and not empty</br>
+     *
+     * <b>Post-condition</b> : Map and sets has to be empty</br>
+     *
+     * <b>Exptected results</b> : returned object has to be what they are supposed
+     * to and map and sets have to be empty</br>
+     */
     @Test
     public void setRemoveTest() {
         fill();
@@ -935,6 +957,27 @@ public class MapAdapterTest {
         assertTrue(keySet.isEmpty());
     }
 
+    /**
+     * <b>Method</b> : containsAll(Collection)</br>
+     *
+     * <b>Summary</b> : test generates an exception, using null argoument. Then it
+     * geerates an "half map" with only even key-values and all its sets. Test
+     * searchs for different myMap-sets in map-sets</br>
+     *
+     * <b>Design</b> : test is based on searching existing and not existing
+     * sets</br>
+     *
+     * <b>Test Description</b> : test throws exception, then search for sets</br>
+     *
+     * <b>Pre-conditions</b> : map has to be initialized and filled with some
+     * values. MyMap have half entries</br>
+     *
+     * <b>Post-condition</b> : N/A</br>
+     *
+     * <b>Exptected results</b> : true if myMap-sets are in inside map-sets, false
+     * otherwise. Exception thrown when called</br>
+     *
+     */
     @Test
     public void setContainsAllTest() {
         createIterator();
@@ -943,10 +986,47 @@ public class MapAdapterTest {
             entrySet.containsAll(null);
             valueSet.containsAll(null);
         });
+
+        fill();
+
+        MapAdapter myMap = new MapAdapter();
+
+        HSet myKSet = myMap.keySet();
+        HSet myESet = myMap.entrySet();
+        HCollection myVSet = myMap.values();
+
+        // fil
+        for (int i = 0; i < 20; i++) {
+            String tmp = "valore n. " + i;
+            if (i % 2 == 0)
+                myMap.put(i, tmp);
+        }
+
+        assertTrue(keySet.containsAll(myKSet));
+        assertTrue(entrySet.containsAll(myESet));
+        assertTrue(valueSet.containsAll(myVSet));
     }
 
+    /**
+     * <b>Method</b> : addAll(Collection)</br>
+     *
+     * <b>Summary</b> : test generates an exception, adding from a set (set cant
+     * male structural changes).
+     *
+     * <b>Design</b> : test exception (add isnt supported from sets)</br>
+     *
+     * <b>Test Description</b> : test throws exception</br>
+     *
+     * <b>Pre-conditions</b> : set has to exist</br>
+     *
+     * <b>Post-condition</b> : N/A</br>
+     *
+     * <b>Exptected results</b> : exception when trying to make structural changes
+     * from sets</br>
+     *
+     */
     @Test
-    public void setAddAll() {
+    public void setAddAllTest() {
         createIterator();
         assertThrows(UnsupportedOperationException.class, () -> {
             keySet.add("prova");
@@ -954,11 +1034,35 @@ public class MapAdapterTest {
         assertThrows(UnsupportedOperationException.class, () -> {
             valueSet.add("prova");
         });
+
+        // DA FARE
+
         // cant make any other test cuz with only MapAdapter calss public, we can make
         // SetAdapters only through MapAdapter.TypeSet(), but since this, add() and
         // addAll() are no more allowed (UnsupportedOperationEcxception)
     }
 
+    /**
+     * <b>Method</b> : retainAll(Collection)</br>
+     *
+     * <b>Summary</b> : test generates an exception. Than testMap is filled with 20
+     * entries and myMap with half of them. RetainAll() is called and check if ill
+     * only fint this set. Then repeta for every set.<br>
+     *
+     * <b>Design</b> : test exception and if retain all leave only Collection c
+     * elements in the map</br>
+     *
+     * <b>Test Description</b> : test throws exception, then -for every set- retain
+     * only even entries and check if the set has only them inside</br>
+     *
+     * <b>Pre-conditions</b> : testMap and myMap sets have to exist</br>
+     *
+     * <b>Post-condition</b> : Sets have onyl even entries</br>
+     *
+     * <b>Exptected results</b> : exception when called and find only argoument
+     * collection inside sets</br>
+     *
+     */
     @Test
     public void setRetainAllTest() {
         createIterator();
@@ -971,9 +1075,89 @@ public class MapAdapterTest {
         assertThrows(NullPointerException.class, () -> {
             valueSet.retainAll(null);
         });
-        // COME LO FACCIO?
+
+        // keySet
+        fill();
+
+        MapAdapter myMap = new MapAdapter();
+
+        HSet myKSet = myMap.keySet();
+
+        // fil
+        for (int i = 0; i < 20; i++) {
+            String tmp = "valore n. " + i;
+            if (i % 2 == 0)
+                myMap.put(i, tmp);
+        }
+
+        assertTrue(keySet.retainAll(myKSet));
+        assertTrue(keySet.containsAll(myKSet));
+        assertEquals(keySet.size(), myKSet.size());
+
+        // entrySet
+        init();
+        createIterator();
+        fill();
+
+        myMap = new MapAdapter();
+
+        HCollection myVSet = myMap.values();
+
+        // fill
+        for (int i = 0; i < 20; i++) {
+            String tmp = "valore n. " + i;
+            if (i % 2 == 0)
+                myMap.put(i, tmp);
+        }
+
+        assertTrue(valueSet.retainAll(myVSet));
+        assertTrue(valueSet.containsAll(myVSet));
+        assertEquals(valueSet.size(), myVSet.size());
+
+        // entrySet
+        init();
+        createIterator();
+        fill();
+
+        myMap = new MapAdapter();
+
+        HSet myESet = myMap.entrySet();
+
+        // fil
+        for (int i = 0; i < 20; i++) {
+            String tmp = "valore n. " + i;
+            if (i % 2 == 0)
+                myMap.put(i, tmp);
+        }
+
+        assertTrue(entrySet.retainAll(myESet));
+        assertTrue(entrySet.containsAll(myESet));
+        assertEquals(entrySet.size(), myESet.size());
+
     }
 
+    /**
+     * <b>Method</b> : removeAll(Collection)</br>
+     *
+     * <b>Summary</b> : test generates an exception. Than testMap is filled with 20
+     * entries, myMap with half of them, oddMap with other half. RemoveAll() is
+     * called and check if ill only fint the odd set. Then repeta for every set.<br>
+     *
+     * <b>Design</b> : test exception and if remove all leave only !(Collection c)
+     * elements in the map</br>
+     *
+     * <b>Test Description</b> : test throws exception, then -for every set- remove
+     * only even entries and check if the set has only odd entries inside</br>
+     *
+     * <b>Pre-conditions</b> : testMap, myMap and oddMap sets have to exist. myMap
+     * and oddMap have to have totally different enties</br>
+     *
+     * <b>Post-condition</b> : Sets have onyl odd entries</br>
+     *
+     * <b>Exptected results</b> : exception when called and find only odd collection
+     * inside sets</br>
+     *
+     */
     @Test
     public void setRemoveAllTest() {
         createIterator();
@@ -986,9 +1170,99 @@ public class MapAdapterTest {
         assertThrows(NullPointerException.class, () -> {
             valueSet.retainAll(null);
         });
-        // COME STRACAZZO LO FACCIO?
+
+        // keySet
+        fill();
+
+        MapAdapter myMap = new MapAdapter();
+        MapAdapter oddMap = new MapAdapter();
+
+        HSet myKSet = myMap.keySet();
+        HSet oddSet = oddMap.keySet();
+
+        // fil
+        for (int i = 0; i < 20; i++) {
+            String tmp = "valore n. " + i;
+            if (i % 2 == 0)
+                myMap.put(i, tmp);
+            else
+                oddMap.put(i, tmp);
+        }
+
+        assertTrue(keySet.removeAll(myKSet));
+        assertTrue(keySet.containsAll(oddSet));
+
+        // entrySet
+        init();
+        createIterator();
+        fill();
+
+        myMap = new MapAdapter();
+        oddMap = new MapAdapter();
+
+        HCollection myVSet = myMap.values();
+        HCollection oddset = oddMap.values();
+
+        // fill
+        for (int i = 0; i < 20; i++) {
+            String tmp = "valore n. " + i;
+            if (i % 2 == 0)
+                myMap.put(i, tmp);
+            else
+                oddMap.put(i, tmp);
+        }
+
+        assertTrue(valueSet.removeAll(myVSet));
+        assertTrue(valueSet.containsAll(oddset));
+
+        // entrySet
+        init();
+        createIterator();
+        fill();
+
+        myMap = new MapAdapter();
+        oddMap = new MapAdapter();
+
+        HSet myESet = myMap.entrySet();
+        oddSet = oddMap.entrySet();
+
+        // fill
+        for (int i = 0; i < 20; i++) {
+            String tmp = "valore n. " + i;
+            if (i % 2 == 0)
+                myMap.put(i, tmp);
+            else
+                oddMap.put(i, tmp);
+        }
+        HIterator myI = oddSet.iterator();
+        HIterator myIt = myESet.iterator();
+
+        assertTrue(entrySet.removeAll(myESet));
+        assertTrue(entrySet.containsAll(oddSet));
     }
 
+    /**
+     * <b>Method</b> : removeAll(Collection)</br>
+     *
+     * <b>Summary</b> : test generates an exception. Than testMap is filled with 20
+     * entries, myMap with half of them, oddMap with other half. RemoveAll() is
+     * called and check if ill only fint the odd set. Then repeta for every set.<br>
+     *
+     * <b>Design</b> : test exception and if remove all leave only !(Collection c)
+     * elements in the map</br>
+     *
+     * <b>Test Description</b> : test throws exception, then -for every set- remove
+     * only even entries and check if the set has only odd entries inside</br>
+     *
+     * <b>Pre-conditions</b> : testMap, myMap and oddMap sets have to exist. myMap
+     * and oddMap have to have totally different enties</br>
+     *
+     * <b>Post-condition</b> : Sets have onyl odd entries</br>
+     *
+     * <b>Exptected results</b> : exception when called and find only odd collection
+     * inside sets</br>
+     *
+     */
     @Test
     public void setClearTest() {
         fill();
@@ -1030,6 +1304,25 @@ public class MapAdapterTest {
     }
 
     // EntryAdapter test
+    /**
+     * <b>Method</b> equals()</br>
+     *
+     * <b>Summary</b> : testMap and myMap are filled the samt way, then their
+     * entrySet compared</br>
+     *
+     * <b>Design</b> : two different maps are manually filled with same entries.
+     * Then they are compared</br>
+     *
+     * <b>Test Description</b> : it checks if the equals method works as intended
+     * and returns true if Object are the same, false otherwise</br>
+     *
+     * <b>Pre-conditions</b> : Both Maps have to be initialized and filled</br>
+     *
+     * <b>Post-condition</b> : N/A</br>
+     *
+     * <b>Expected results</b> : True if they are the same, false otherwise</br>
+     *
+     */
     @Test
     public void entryEqualsTest() {
         fill();
@@ -1051,6 +1344,25 @@ public class MapAdapterTest {
             assertTrue(myEntryIterator.next().equals(entryIter.next()));
     }
 
+    /**
+     * <b>Method</b> hashCode()</br>
+     *
+     * <b>Summary</b> : with empty map invoceted. Its compared with 0</br>
+     *
+     * <b>Design</b> : test checks if hashCode method make the same hashCode as
+     * given formula</br>
+     *
+     * <b>Test Description</b> : hashCode is intended as 0 and with method. Then
+     * compared</br>
+     *
+     * <b>Pre-conditions</b> : Map has to be initialized and empty</br>
+     *
+     * <b>Post-condition</b> : N/A</br>
+     *
+     * <b>Expected results</b> : True hashCode() is equals to "manual" hashcode,
+     * false otherwise</br>
+     *
+     */
     @Test
     public void entryHashcodeTest() {
         createIterator();
